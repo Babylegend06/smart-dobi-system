@@ -1,19 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <title>DOBI MIJAN - Arahan</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobi Mijan - Timer</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .machine-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .machine-info div {
+            color: white;
+            margin: 5px 0;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .timer-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid #FFC107;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .timer-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .timer-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        .status-info {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .timer-running .timer-circle {
+            border-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .timer-complete .timer-circle {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .glass-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .timer-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .timer-text {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Arahan</h2>
-    <p>Masukkan baju anda dan tekan START di mesin fizikal.</p>
-    <button onclick="backHome()">Back to Home</button>
-  </div>
+    <div class="glass-container">
+        <h1 id="timer-title">Menunggu Mesin</h1>
+        <p class="subtitle" id="timer-subtitle">Mesin <span id="timer-machine">1</span> - Sila tekan BUTTON START pada mesin</p>
+        
+        <div class="machine-info">
+            <div><strong>ESP32 Controller:</strong> <span id="esp-controller">1</span></div>
+            <div><strong>Relay Port:</strong> <span id="relay-port">A</span></div>
+            <div><strong>Status Mesin:</strong> <span id="machine-status">READY</span></div>
+        </div>
+        
+        <div class="timer-container" id="timer-display">
+            <div class="timer-circle">
+                <div class="timer-text">
+                    <span id="minutes">00</span>:<span id="seconds">00</span>
+                </div>
+            </div>
+            <p class="timer-info" id="timer-info">Lampu HIJAU menyala - Tekan BUTTON START</p>
+        </div>
+        
+        <div class="status-info">
+            <div class="status-item">
+                <span class="status-icon">💡</span>
+                <span>Lampu HIJAU: Mesin sedia digunakan</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon">🔘</span>
+                <span>Tekan BUTTON START pada mesin untuk mula</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon">📱</span>
+                <span>Notifikasi akan dihantar ke WhatsApp</span>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn-back" onclick="goToHome()">Kembali ke Menu</button>
+        </div>
+    </div>
 
-  <script>
-    function backHome(){ window.location.href = "index.html"; }
-  </script>
-</body>
-</html>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+            authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+            databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smart-dobi-system-fyp",
+            storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+            messagingSenderId: "377544234994",
+            appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let timerInterval = null;
+        let timeLeft = 60;
+        const selectedMachine = parseInt(localStorage.getItem('selectedMachine')) || 1;
+        const customerPhone = localStorage.getItem('customerPhone');
+
+        // Determine ESP32 controller and relay port
+        let espController, relayPort;
+        if (selectedMachine <= 2) {
+            espController = 1;
+            relayPort = selectedMachine === 1 ? 'A' : 'B';
+        } else {
+            espController = 2;
+            relayPort = selectedMachine === 3 ? 'A' : 'B';
+        }
+
+        document.getElementById('timer-machine').textContent = selectedMachine;
+        document.getElementById('esp-controller').textContent = espController;
+        document.getElementById('relay-port').textContent = relayPort;
+
+        // Listen for machine status changes
+        database.ref('machines/' + selectedMachine + '/status').on('value', (snapshot) => {
+            const status = snapshot.val();
+            document.getElementById('machine-status').textContent = status;
+            
+            if (status === 'RUNNING') {
+                startMachineOperation();
+            } else if (status === 'DONE') {
+                timerComplete();
+            }
+        });
+
+        function startMachineOperation() {
+            document.getElementById('timer-title').textContent = 'Mesin Sedang Beroperasi';
+            document.getElementById('timer-subtitle').textContent = `Mesin ${selectedMachine} sedang membasuh...`;
+            document.getElementById('timer-info').textContent = 'Mesin sedang beroperasi...';
+            document.getElementById('timer-display').classList.add('timer-running');
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // ESP32 will update status to DONE automatically
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            document.getElementById('minutes').
