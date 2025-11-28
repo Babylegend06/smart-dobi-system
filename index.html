@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DOBI MIJAN - Pilih Mesin</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Pilih Mesin</h2>
+    <button onclick="selectMachine(1)">Mesin 1</button>
+    <button onclick="selectMachine(2)">Mesin 2</button>
+  </div>
+
+  <script>
+    // Firebase config & initialize
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+      authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+      databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-dobi-system-fyp",
+      storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+      messagingSenderId: "377544234994",
+      appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function selectMachine(machineId){
+      db.ref('selectedMachine').set({ id: machineId });
+      window.location.href = "payment.html";
+    }
+  </script>
+</body>
+</html>
