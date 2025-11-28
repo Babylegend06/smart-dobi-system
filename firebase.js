@@ -4,13 +4,13 @@ import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebase
 
 // Config Firebase Web App
 const firebaseConfig = {
-  apiKey: "AIzaSyAA0Vt9bmzUvcjIHw7JbNbs4y0AjdChA_k",
-  authDomain: "smart-dobi-system.firebaseapp.com",
+  apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+  authDomain: "smart-dobi-system-fyp.firebaseapp.com",
   databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "smart-dobi-system",
-  storageBucket: "smart-dobi-system.firebasestorage.app",
-  messagingSenderId: "1056101144656",
-  appId: "1:1056101144656:web:0861eb6835377b1ca79955"
+  projectId: "smart-dobi-system-fyp",
+  storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+  messagingSenderId: "377544234994",
+  appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
 };
 
 // Initialize
