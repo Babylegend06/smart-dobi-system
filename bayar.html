@@ -2,23 +2,26 @@
 <html>
 <body style="font-family:Arial;text-align:center;padding:40px;">
 
-<h2>Kiosk Smart Dobi</h2>
-<p>Status mesin: <span id="status-text">Belum dibayar</span></p>
+<h2>Imbas QR & Bayar</h2>
+
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FAKEQR_TEST" style="margin:20px;"/>
+
+<p>Status mesin: <span id="status-text" style="color:red;">Belum dibayar</span></p>
+
+<button onclick="approve()" style="padding:15px;margin-top:20px;">Approve</button>
 
 <script>
-const machine = 1; // contoh mesin 1, tukar ikut kiosk
+const url = new URL(window.location.href);
+const machine = url.searchParams.get("machine");
 
-function checkStatus(){
-    const status = localStorage.getItem("mesin"+machine) || "unpaid";
-    if(status === "paid"){
-        document.getElementById("status-text").innerText = "Bayar lengkap";
-        document.getElementById("status-text").style.color = "green";
+function approve(){
+    document.getElementById("status-text").innerText = "Bayar lengkap";
+    document.getElementById("status-text").style.color = "green";
+    // Redirect ke Page 3
+    setTimeout(()=>{
         window.location.href = "page3.html?machine=" + machine;
-    }
+    },1000);
 }
-
-// Polling setiap 2s
-setInterval(checkStatus, 2000);
 </script>
 
 </body>
