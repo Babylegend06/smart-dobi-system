@@ -1,37 +1,29 @@
 <!DOCTYPE html>
 <html>
-<body style="font-family:Arial;text-align:center;padding:40px; text-align:center;">
+<body style="font-family:Arial;text-align:center;padding:40px;">
 
 <h2>Imbas QR & Bayar</h2>
 
-<!-- QR Code untuk demo -->
+<!-- QR Code demo -->
 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SMARTDOBI_TEST" style="margin:20px;"/>
 
 <p>Status mesin: <span id="led-status" style="color:red;">Belum dibayar</span></p>
 
-<!-- Button Approve untuk test web -->
+<!-- Button Approve -->
 <button onclick="approve()" style="padding:15px;margin-top:20px;">Approve</button>
 
 <script>
 const url = new URL(window.location.href);
 const machine = url.searchParams.get("machine");
 
-// Fungsi untuk test auto redirect
 function approve(){
-  // Update LED virtual di web sahaja
-  document.getElementById("led-status").innerHTML = "Bayar lengkap";
-  document.getElementById("led-status").style.color = "green";
+    // Update status LED virtual di web sahaja
+    document.getElementById("led-status").innerHTML = "Bayar lengkap";
+    document.getElementById("led-status").style.color = "green";
 
-  // Redirect ke Page 3 selepas 1 saat
-  setTimeout(()=> {
+    // Redirect ke page3.html
     window.location.href = "page3.html?machine=" + machine;
-  }, 1000);
 }
-
-// Optional: auto redirect selepas 5 saat tanpa klik Approve (boleh test auto flow)
-setTimeout(()=> {
-  approve();
-}, 5000);
 </script>
 
 </body>
