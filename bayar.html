@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
-<body style="font-family:Arial;text-align:center;padding:40px;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body style="font-family:Arial;text-align:center;padding:40px;background:#f4f6fa;">
 
 <h2>Imbas QR & Bayar</h2>
 
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FAKEQR_TEST" style="margin:20px;"/>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=FAKEQR_TEST" style="margin:20px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1)"/>
 
-<p>Status mesin: <span id="status-text" style="color:red;">Belum dibayar</span></p>
+<p>Status mesin: <span id="status-text" style="color:red;font-size:20px;">Belum dibayar</span></p>
 
-<button onclick="approve()" style="padding:15px;margin-top:20px;">Approve</button>
+<button onclick="approve()" style="padding:20px;margin-top:25px;font-size:20px;border-radius:15px;background:rgba(0,180,150,0.8);color:white;border:none;">Approve</button>
 
 <script>
 const url = new URL(window.location.href);
@@ -17,7 +18,7 @@ const machine = url.searchParams.get("machine");
 function approve(){
     document.getElementById("status-text").innerText = "Bayar lengkap";
     document.getElementById("status-text").style.color = "green";
-    // Redirect ke Page 3
+
     setTimeout(()=>{
         window.location.href = "page3.html?machine=" + machine;
     },1000);
