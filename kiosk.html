@@ -3,30 +3,36 @@
 <body style="font-family:Arial;text-align:center;padding:40px;">
 
 <h2>Kiosk Smart Dobi</h2>
-<p>Status mesin: <span id="status-text">Belum dibayar</span></p>
+
+<p>Mesin: <span id="machine-num"></span></p>
+<p>Status: <span id="status-text" style="color:red;">Belum dibayar</span></p>
+
+<h3>Scan QR di phone untuk bayar</h3>
+<img id="qr-code" src="" style="margin:20px;"/>
 
 <script>
-const machine = 1; // contoh mesin 1, boleh tukar ikut kiosk
+const url = new URL(window.location.href);
+const machine = url.searchParams.get("machine");
+document.getElementById("machine-num").innerText = machine;
 
-// Dummy JSON untuk test
+// Papar QR link approve.html untuk phone
+document.getElementById("qr-code").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(location.origin + "/approve.html?machine=" + machine);
+
+// Dummy status JSON
 let status = { "mesin1":"unpaid", "mesin2":"unpaid" };
 
-// Simulate polling untuk demo
-function checkStatus(){
-    // Dalam real setup: fetch('status.json')
+// Simulate phone approve after 5s (untuk demo)
+setTimeout(()=>{ status["mesin"+machine] = "paid"; }, 5000);
+
+// Polling setiap 2s
+setInterval(()=> {
     if(status["mesin"+machine] === "paid"){
         document.getElementById("status-text").innerText = "Bayar lengkap";
         document.getElementById("status-text").style.color = "green";
         // Redirect ke page3
         window.location.href = "page3.html?machine=" + machine;
     }
-}
-
-// Simulate phone approve setelah 5s
-setTimeout(()=>{ status["mesin"+machine]="paid"; }, 5000);
-
-// Polling setiap 2s
-setInterval(checkStatus, 2000);
+}, 2000);
 </script>
 
 </body>
