@@ -7,9 +7,8 @@
 <!-- QR Code demo -->
 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SMARTDOBI_TEST" style="margin:20px;"/>
 
-<p>Status mesin: <span id="led-status" style="color:red;">Belum dibayar</span></p>
+<p>Status mesin: <span id="status-text">Belum dibayar</span></p>
 
-<!-- Button Approve -->
 <button onclick="approve()" style="padding:15px;margin-top:20px;">Approve</button>
 
 <script>
@@ -17,12 +16,12 @@ const url = new URL(window.location.href);
 const machine = url.searchParams.get("machine");
 
 function approve(){
-    // Update status LED virtual di web sahaja
-    document.getElementById("led-status").innerHTML = "Bayar lengkap";
-    document.getElementById("led-status").style.color = "green";
-
-    // Redirect ke Page 3
-    window.location.href = "page3.html?machine=" + machine;
+    // Simulate update JSON (untuk test demo, kita cuma alert)
+    alert("Mesin "+machine+" telah dibayar!\nKiosk akan detect dan auto redirect.");
+    
+    // Dalam real setup: fetch ke server/JSON untuk update status
+    document.getElementById("status-text").innerText = "Bayar lengkap";
+    document.getElementById("status-text").style.color = "green";
 }
 </script>
 
