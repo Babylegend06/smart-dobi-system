@@ -86,10 +86,47 @@
             color: #a5d6a7;
         }
         
+        .whatsapp-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            text-align: left;
+        }
+        
+        .whatsapp-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .whatsapp-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .whatsapp-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .whatsapp-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
         .button {
             display: inline-block;
             padding: 15px 30px;
-            margin-top: 20px;
+            margin: 10px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             text-decoration: none;
@@ -104,6 +141,14 @@
         .button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
+        }
+        
+        .button-skip {
+            background: rgba(255, 193, 7, 0.3);
+        }
+        
+        .button-skip:hover {
+            background: rgba(255, 193, 7, 0.5);
         }
         
         .footer {
@@ -137,7 +182,16 @@
         
         <p>Status mesin: <span id="status-text" class="status-text">Belum dibayar</span></p>
         
-        <button onclick="approve()" class="button">APPROVE</button>
+        <div class="whatsapp-section">
+            <div class="whatsapp-title">NOTIFIKASI WHATSAPP</div>
+            <input type="text" id="whatsapp-number" class="whatsapp-input" placeholder="Masukkan Nombor WhatsApp (cth: 0189892155)">
+            <div class="whatsapp-note">Untuk dapat notifikasi bila mesin sudah siap</div>
+        </div>
+        
+        <div>
+            <button onclick="approve()" class="button">APPROVE</button>
+            <button onclick="skipWhatsApp()" class="button button-skip">SKIP</button>
+        </div>
     </div>
     
     <div class="disclaimer">
@@ -151,8 +205,37 @@
     <script>
         const url = new URL(window.location.href);
         const machine = url.searchParams.get("machine");
+        
+        // Check if WhatsApp number is already saved
+        let savedWhatsApp = localStorage.getItem('dobi_whatsapp');
+        if (savedWhatsApp) {
+            document.getElementById('whatsapp-number').value = savedWhatsApp;
+        }
 
         function approve() {
+            const whatsappNumber = document.getElementById('whatsapp-number').value.trim();
+            
+            // Save WhatsApp number if provided
+            if (whatsappNumber) {
+                localStorage.setItem('dobi_whatsapp', whatsappNumber);
+                alert('Nombor WhatsApp ' + whatsappNumber + ' telah disimpan untuk notifikasi!');
+            }
+            
+            document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
+            document.getElementById("status-text").className = "status-text status-paid";
+            
+            // Redirect ke Page 3
+            setTimeout(() => {
+                window.location.href = "page3.html?machine=" + machine;
+            }, 1500);
+        }
+        
+        function skipWhatsApp() {
+            // Clear saved WhatsApp number if skipping
+            localStorage.removeItem('dobi_whatsapp');
+            document.getElementById('whatsapp-number').value = '';
+            alert('Notifikasi WhatsApp telah dipadam. Teruskan pembayaran.');
+            
             document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
             document.getElementById("status-text").className = "status-text status-paid";
             
