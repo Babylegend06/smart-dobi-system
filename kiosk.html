@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;text-align:center;padding:40px;">
+
+<h2>Kiosk Smart Dobi</h2>
+<p>Status mesin: <span id="status-text">Belum dibayar</span></p>
+
+<script>
+const machine = 1; // contoh mesin 1, boleh tukar ikut kiosk
+
+// Dummy JSON untuk test
+let status = { "mesin1":"unpaid", "mesin2":"unpaid" };
+
+// Simulate polling untuk demo
+function checkStatus(){
+    // Dalam real setup: fetch('status.json')
+    if(status["mesin"+machine] === "paid"){
+        document.getElementById("status-text").innerText = "Bayar lengkap";
+        document.getElementById("status-text").style.color = "green";
+        // Redirect ke page3
+        window.location.href = "page3.html?machine=" + machine;
+    }
+}
+
+// Simulate phone approve setelah 5s
+setTimeout(()=>{ status["mesin"+machine]="paid"; }, 5000);
+
+// Polling setiap 2s
+setInterval(checkStatus, 2000);
+</script>
+
+</body>
+</html>
