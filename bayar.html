@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html>
-<body style="font-family:Arial;text-align:center;padding:40px;">
+<body style="font-family:Arial;text-align:center;padding:40px; text-align:center;">
 
-<h2>Imbas QR Untuk Membayar</h2>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DOBI_LAYAN_DIRI" style="margin:20px;"/>
+<h2>Imbas QR & Bayar</h2>
 
-<p>Status mesin: <span id="led-status" style="color:red;font-weight:bold;">Belum dibayar</span></p>
+<!-- QR Code untuk demo -->
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SMARTDOBI_TEST" style="margin:20px;"/>
 
-<button onclick="paid()" style="padding:15px;margin-top:20px;">Saya Sudah Bayar</button>
+<p>Status mesin: <span id="led-status" style="color:red;">Belum dibayar</span></p>
+
+<!-- Button Approve untuk test web -->
+<button onclick="approve()" style="padding:15px;margin-top:20px;">Approve</button>
 
 <script>
 const url = new URL(window.location.href);
 const machine = url.searchParams.get("machine");
 
-function paid(){
-  // Hantar data ke ESP32 (dummy link)
-  fetch(`http://IP_ESP32/paid?machine=${machine}`)
-    .then(()=> {
-      // Update LED virtual
-      document.getElementById("led-status").innerHTML = "Bayar lengkap";
-      document.getElementById("led-status").style.color = "green";
-      // Pergi Page 3 selepas 1 saat
-      setTimeout(()=> {
-        window.location.href = "page3.html?machine="+machine;
-      }, 1000);
-    });
+// Fungsi untuk test auto redirect
+function approve(){
+  // Update LED virtual di web sahaja
+  document.getElementById("led-status").innerHTML = "Bayar lengkap";
+  document.getElementById("led-status").style.color = "green";
+
+  // Redirect ke Page 3 selepas 1 saat
+  setTimeout(()=> {
+    window.location.href = "page3.html?machine=" + machine;
+  }, 1000);
 }
+
+// Optional: auto redirect selepas 5 saat tanpa klik Approve (boleh test auto flow)
+setTimeout(()=> {
+  approve();
+}, 5000);
 </script>
 
 </body>
