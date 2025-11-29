@@ -1,45 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  font-family: Arial;
-  background: linear-gradient(145deg,#f0f0f5,#d9d9e6);
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(145deg,#e0e4f1,#cfd4e6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 40px;
+  padding: 40px 20px;
   min-height: 100vh;
 }
-h1 { margin-bottom: 30px; }
+h1 { margin-bottom: 30px; text-align:center; color:#333; }
+
 .glass-card {
-  backdrop-filter: blur(10px);
-  background: rgba(255,255,255,0.2);
-  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.25);
+  border-radius: 25px;
   border: 1px solid rgba(255,255,255,0.3);
   padding: 30px;
   margin: 20px;
-  width: 220px;
+  width: 90%;
+  max-width: 350px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
 }
 .timer {
-  font-size: 20px;
+  font-size: 24px;
   margin-top: 10px;
   color: #333;
 }
 .status {
   margin-top: 10px;
   font-weight: bold;
+  font-size: 18px;
   color: green;
 }
 a.button {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 15px 25px;
   margin-top: 15px;
-  background: rgba(0,200,150,0.7);
+  background: rgba(0,180,150,0.8);
   color: white;
   text-decoration: none;
-  border-radius: 12px;
-  trans
+  border-radius: 15px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+a.button:hover {
+  background: rgba(0,180,150,1);
+}
+@media (min-width: 768px){
+  body { padding: 60px 40px; }
+  .glass-card { margin: 30px; }
+}
+</style>
+</head>
+<body>
+
+<h1>Smart Dobi Kiosk</h1>
+
+<div class="glass-card" id="machine1-card">
+  <h3>Mesin 1</h3>
+  <p class="status" id="status1">Available</p>
+  <a href="bayar.html?machine=1" class="button" onclick="startMachine(1)">Pilih</a>
+  <div class="timer" id="timer1">00:00</div>
+</div>
+
+<div class="glass-card" id="machine2-card">
+  <h3>Mesin 2</h3>
+  <p class="status" id="status2">Available</p>
+  <a href="bayar.html?machine=2" class="button" onclick="startMachine(2)">Pilih</a>
+  <div class="timer" id="timer2">00:00</div>
+</div>
+
+<script>
+let machines = {
+  1: {status:"available", sec:0, interval:null},
+  2: {status:"available", sec:0, interval:null}
+};
+
+function startMachine(id){
+  if(machines[id].status === "unavailable"){
+    alert("Mesin sudah digunakan!");
+    return;
+  }
+  machines[id].status = "unavailable";
+  document.getElementById("status"+id).innerText = "Unavailable";
+  document.getElementById("status"+id).style.color = "red";
+  
+  machines[id].interval = setInterval(()=>{
+    machines[id].sec++;
+    let m = String(Math.floor(machines[id].sec/60)).padStart(2,'0');
+    let s = String(machines[id].sec%60).padStart(2,'0');
+    document.getElementById("timer"+id).innerText = m + ":" + s;
+  },1000);
+}
+</script>
+
+</body>
+</html>
