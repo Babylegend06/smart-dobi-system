@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOBIABU - Pilih Mesin</title>
+    <title>DOBIABU - Pembayaran</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
         
@@ -44,85 +44,96 @@
             opacity: 0.9;
         }
         
-        .machines-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            max-width: 1200px;
-            width: 100%;
-        }
-        
-        .glass-card {
+        .payment-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 25px;
-            width: 280px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 30px;
         }
         
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        .payment-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
         }
         
-        .machine-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #fff;
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
         }
         
-        .machine-weight {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-        
-        .status {
+        .status-text {
             font-size: 1.2rem;
-            font-weight: bold;
-            margin: 15px 0;
-            padding: 8px 15px;
+            margin: 20px 0;
+            padding: 10px 20px;
             border-radius: 50px;
             display: inline-block;
-        }
-        
-        .status-available {
-            background-color: rgba(76, 175, 80, 0.3);
-            color: #a5d6a7;
-        }
-        
-        .status-unavailable {
-            background-color: rgba(244, 67, 54, 0.3);
+            background: rgba(244, 67, 54, 0.3);
             color: #ef9a9a;
         }
         
-        .status-broken {
-            background-color: rgba(158, 158, 158, 0.3);
-            color: #e0e0e0;
+        .status-paid {
+            background: rgba(76, 175, 80, 0.3);
+            color: #a5d6a7;
         }
         
-        .timer {
+        .whatsapp-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            text-align: left;
+        }
+        
+        .whatsapp-title {
             font-size: 1.3rem;
-            margin: 15px 0;
-            font-family: monospace;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .whatsapp-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .whatsapp-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .whatsapp-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 10px;
+            text-align: center;
         }
         
         .button {
             display: inline-block;
-            padding: 12px 25px;
-            margin-top: 10px;
+            padding: 15px 30px;
+            margin: 10px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -132,59 +143,59 @@
             transform: scale(1.05);
         }
         
-        .button-disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            cursor: not-allowed;
+        .button-skip {
+            background: rgba(255, 193, 7, 0.3);
         }
         
-        .button-disabled:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: none;
+        .button-skip:hover {
+            background: rgba(255, 193, 7, 0.5);
         }
         
         .footer {
-            margin-top: 40px;
+            margin-top: 20px;
             text-align: center;
             font-size: 0.9rem;
             opacity: 0.7;
+        }
+        
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 500px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="logo">DOBIABU</div>
-        <div class="subtitle">WASHER & DRYER</div>
+        <div class="subtitle">PEMBAYARAN</div>
     </div>
     
-    <div class="machines-container">
-        <div class="glass-card" id="machine1-card">
-            <h3 class="machine-title">MESIN 1</h3>
-            <div class="machine-weight">15KG</div>
-            <div class="status status-available" id="status1">AVAILABLE</div>
-            <a href="bayar.html?machine=1" class="button" onclick="startMachine(1)">PILIH</a>
-            <div class="timer" id="timer1">00:00</div>
+    <div class="payment-container">
+        <h2 class="payment-title">Imbas QR & Bayar</h2>
+        
+        <div class="qr-code">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=DOBIABU_FAKE_QR_MACHINE_1" alt="QR Code" style="width:100%; height:100%;">
         </div>
         
-        <div class="glass-card" id="machine2-card">
-            <h3 class="machine-title">MESIN 2</h3>
-            <div class="machine-weight">10KG</div>
-            <div class="status status-available" id="status2">AVAILABLE</div>
-            <a href="bayar.html?machine=2" class="button" onclick="startMachine(2)">PILIH</a>
-            <div class="timer" id="timer2">00:00</div>
+        <p>Status mesin: <span id="status-text" class="status-text">Belum dibayar</span></p>
+        
+        <div class="whatsapp-section">
+            <div class="whatsapp-title">NOTIFIKASI WHATSAPP</div>
+            <input type="text" id="whatsapp-number" class="whatsapp-input" placeholder="Masukkan Nombor WhatsApp (cth: 0189892155)">
+            <div class="whatsapp-note">Untuk dapat notifikasi bila mesin sudah siap</div>
         </div>
         
-        <div class="glass-card" id="machine3-card">
-            <h3 class="machine-title">MESIN 3</h3>
-            <div class="status status-broken" id="status3">ROSAK</div>
-            <div class="button button-disabled">PILIH</div>
+        <div>
+            <button onclick="approve()" class="button">APPROVE</button>
+            <button onclick="skipWhatsApp()" class="button button-skip">SKIP</button>
         </div>
-        
-        <div class="glass-card" id="machine4-card">
-            <h3 class="machine-title">MESIN 4</h3>
-            <div class="status status-broken" id="status4">ROSAK</div>
-            <div class="button button-disabled">PILIH</div>
-        </div>
+    </div>
+    
+    <div class="disclaimer">
+        DISCLAIMER: UNTUK MENDAPAT NOTIFIKASI WHATSAPP DARI SYSTEM MESIN ANDA SUDAH SIAP DICUCI. JIKA TIDAK MAHU BOLEH TEKAN SKIP
     </div>
     
     <div class="footer">
@@ -192,33 +203,46 @@
     </div>
 
     <script>
-        // Mesin status dan timer
-        let machines = {
-            1: {status: "available", sec: 0, interval: null},
-            2: {status: "available", sec: 0, interval: null},
-            3: {status: "broken", sec: 0, interval: null},
-            4: {status: "broken", sec: 0, interval: null}
-        };
+        const url = new URL(window.location.href);
+        const machine = url.searchParams.get("machine");
+        
+        // Check if WhatsApp number is already saved
+        let savedWhatsApp = localStorage.getItem('dobi_whatsapp');
+        if (savedWhatsApp) {
+            document.getElementById('whatsapp-number').value = savedWhatsApp;
+        }
 
-        function startMachine(id) {
-            if (machines[id].status === "unavailable" || machines[id].status === "broken") {
-                alert("Mesin tidak boleh digunakan!");
-                return false;
+        function approve() {
+            const whatsappNumber = document.getElementById('whatsapp-number').value.trim();
+            
+            // Save WhatsApp number if provided
+            if (whatsappNumber) {
+                localStorage.setItem('dobi_whatsapp', whatsappNumber);
+                alert('Nombor WhatsApp ' + whatsappNumber + ' telah disimpan untuk notifikasi!');
             }
             
-            machines[id].status = "unavailable";
-            document.getElementById("status" + id).innerText = "UNAVAILABLE";
-            document.getElementById("status" + id).className = "status status-unavailable";
+            document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
+            document.getElementById("status-text").className = "status-text status-paid";
             
-            // Timer
-            machines[id].interval = setInterval(() => {
-                machines[id].sec++;
-                let m = String(Math.floor(machines[id].sec / 60)).padStart(2, '0');
-                let s = String(machines[id].sec % 60).padStart(2, '0');
-                document.getElementById("timer" + id).innerText = m + ":" + s;
-            }, 1000);
+            // Redirect ke Page 3
+            setTimeout(() => {
+                window.location.href = "page3.html?machine=" + machine;
+            }, 1500);
+        }
+        
+        function skipWhatsApp() {
+            // Clear saved WhatsApp number if skipping
+            localStorage.removeItem('dobi_whatsapp');
+            document.getElementById('whatsapp-number').value = '';
+            alert('Notifikasi WhatsApp telah dipadam. Teruskan pembayaran.');
             
-            return true;
+            document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
+            document.getElementById("status-text").className = "status-text status-paid";
+            
+            // Redirect ke Page 3
+            setTimeout(() => {
+                window.location.href = "page3.html?machine=" + machine;
+            }, 1500);
         }
     </script>
 </body>
