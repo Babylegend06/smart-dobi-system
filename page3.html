@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;text-align:center;padding:40px;">
+
+<h2>Arahan</h2>
+<p>Mesin <span id="machine-num"></span></p>
+<p>1️⃣ Masukkan pakaian anda ke mesin.</p>
+<p>2️⃣ Tekan button START fizikal pada mesin.</p>
+<p>Terima kasih kerana menggunakan Smart Dobi!</p>
+
+<div style="margin-top:30px;">
+  <button onclick="back()" style="padding:15px;margin:5px;">Kembali ke Pilih Mesin</button>
+</div>
+
+<script>
+const url = new URL(window.location.href);
+const machine = url.searchParams.get("machine");
+document.getElementById("machine-num").innerHTML = machine;
+
+function back(){
+  window.location.href = "mesin.html";
+}
+</script>
+
+</body>
+</html>
