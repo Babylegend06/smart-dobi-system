@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ====== FONT ====== */
 @font-face {
     font-family: 'Frankfurter';
     src: url('Frankfurter Highlight Std Regular.otf');
@@ -19,34 +20,11 @@ body {
   align-items: center;
 }
 
-/* ====================
-    HEADER LOGO SPACE
-======================= */
-.logo-box {
-  width: 90%;
-  max-width: 400px;
-  height: 120px;
-  border-radius: 20px;
-  margin-bottom: 25px;
-
-  /* Glass effect */
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(15px);
-  border: 2px solid rgba(255,255,255,0.35);
-  box-shadow: 0px 10px 35px rgba(0,0,0,0.15);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  color: #005b96;
-  font-size: 24px;
-
-}
+/* ====== LOGO SPACE ====== */
 .header-logo {
   width: 100%;
   max-width: 450px;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
 }
@@ -57,12 +35,7 @@ body {
   object-fit: contain;
 }
 
-
-}
-
-/* ====================
-      MACHINE CARDS
-======================= */
+/* ====== MACHINE CARDS ====== */
 .card {
   width: 90%;
   max-width: 360px;
@@ -70,47 +43,45 @@ body {
   border-radius: 25px;
   margin: 20px 0;
 
-  /* Glass */
+  /* Glass effect */
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(15px);
   border: 2px solid rgba(255,255,255,0.35);
 
-  /* 3D shadow */
+  /* 3D */
   box-shadow: 0px 12px 40px rgba(0,0,0,0.25);
-
   text-align: center;
   transition: 0.3s;
 }
 .card:hover { transform: translateY(-8px); }
 
-/* Placeholder for machine image */
-.img-box {
-  width: 100%;
-  height: 150px;
-  border-radius: 20px;
+/* ====== TEXT ====== */
+.card h2 {
+  color: #023e8a;
+  margin-bottom: 5px;
+  font-size: 30px;
+}
+
+.weight {
+  color: #0077b6;
+  font-size: 22px;
   margin-bottom: 15px;
-
-  background: rgba(255,255,255,0.3);
-  border: 1px dashed rgba(0,0,0,0.2);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #005b96;
 }
 
 .status {
   font-size: 20px;
   margin-top: 10px;
+  font-weight: bold;
 }
 
 .timer {
   font-size: 26px;
   margin: 10px 0;
   color: #005b96;
+  font-weight: bold;
 }
 
+/* ====== BUTTON ====== */
 .button {
   display: inline-block;
   padding: 15px 30px;
@@ -128,23 +99,16 @@ body {
 
 <body>
 
-<!-- =======================
-      LOGO BOX
-========================= -->
+<!-- ====== LOGO ====== -->
 <div class="header-logo">
-  <img src="logo.png" alt="Logo Dobi" />
+  <!-- 💠 LETAK LOGO DI SINI -->
+  <img src="logo.png" alt="Dobi Logo">
 </div>
 
-<!-- =======================
-      MESIN 1
-========================= -->
+<!-- ====== MACHINE 1 ====== -->
 <div class="card" id="machine1">
-
-  <div class="img-box">
-    GAMBAR MESIN 1 DI SINI
-  </div>
-
-  <h2 style="color:#023e8a;">MESIN 1</h2>
+  <h2>MESIN 1</h2>
+  <div class="weight">20 KG</div>
 
   <div class="status" id="status1" style="color:green;">AVAILABLE</div>
 
@@ -153,17 +117,10 @@ body {
   <a href="bayar.html?machine=1" class="button" onclick="startMachine(1)">PILIH</a>
 </div>
 
-
-<!-- =======================
-      MESIN 2
-========================= -->
+<!-- ====== MACHINE 2 ====== -->
 <div class="card" id="machine2">
-
-  <div class="img-box">
-    GAMBAR MESIN 2 DI SINI
-  </div>
-
-  <h2 style="color:#023e8a;">MESIN 2</h2>
+  <h2>MESIN 2</h2>
+  <div class="weight">25 KG</div>
 
   <div class="status" id="status2" style="color:green;">AVAILABLE</div>
 
@@ -174,6 +131,7 @@ body {
 
 
 <script>
+/* ===== TIMER SYSTEM ===== */
 let machines = {
   1: {status:"available", sec:0, interval:null},
   2: {status:"available", sec:0, interval:null}
@@ -183,6 +141,7 @@ function startMachine(id){
   if (machines[id].status === "unavailable") return;
 
   machines[id].status = "unavailable";
+
   document.getElementById("status"+id).innerHTML = "UNAVAILABLE";
   document.getElementById("status"+id).style.color = "red";
 
