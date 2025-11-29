@@ -15,10 +15,10 @@
 <script>
 const url = new URL(window.location.href);
 const machine = url.searchParams.get("machine");
-document.getElementById("machine-num").innerHTML = machine;
+document.getElementById("machine-num").innerText = machine;
 
 function back(){
-  window.location.href = "mesin.html"; // pastikan mesin.html ada
+  window.location.href = "mesin.html";
 }
 </script>
 
