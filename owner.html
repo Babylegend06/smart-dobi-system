@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOBIABU - Owner Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header { text-align: center; margin: 20px 0; }
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px;
+      text-align: center;
+    }
+    .metric { font-size: 2.2rem; color: #81d4fa; margin: 10px 0; }
+    .label { opacity: 0.85; font-size: 1rem; }
+    #active-list { text-align: left; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 OWNER DASHBOARD</h1>
+    <div>Tarikh: <span id="today"></span></div>
+  </div>
 
+  <div class="card">
+    <div class="label">JUMLAH KITARAN HARI INI</div>
+    <div class="metric" id="total-cycles">0</div>
+  </div>
+
+  <div class="card">
+    <div class="label">PENDAPATAN HARIAN (RM)</div>
+    <div class="metric" id="total-revenue">0.00</div>
+  </div>
+
+  <div class="card">
+    <div class="label">MESIN AKTIF SEKARANG</div>
+    <div id="active-list">Tiada mesin aktif</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+      authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+      databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-dobi-system-fyp",
+      storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+      messagingSenderId: "377544234994",
+      appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('today').innerText = today;
+
+    // Baca rekod harian
+    onValue(ref(db, `daily_records/${today}`), (snapshot) => {
+      const data = snapshot.val() || {};
+      document.getElementById('total-cycles').innerText = data.total_cycles || 0;
+      document.getElementById('total-revenue').innerText = (data.total_revenue || 0).toFixed(2);
+    });
+
+    // Baca status mesin
+    const activeList = document.getElementById('active-list');
+    onValue(ref(db, 'machines'), (snapshot) => {
+      const active = [];
+      snapshot.forEach(child => {
+        const id = child.key;
+        const val = child.val();
+        if (val && val.status === 'washing') {
+          active.push(`Mesin ${id} (sejak ${new Date(val.started_at).toLocaleTimeString()})`);
+        }
+      });
+      activeList.innerHTML = active.length ? active.map(s => `<div>• ${s}</div>`).join('') : "Tiada mesin aktif";
+    });
+  </script>
+</body>
+</html>
