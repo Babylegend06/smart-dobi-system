@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOBIABU - Pilih Mesin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .machines-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .machine-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .machine-weight {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+        
+        .status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .status-available {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #a5d6a7;
+        }
+        
+        .status-unavailable {
+            background-color: rgba(244, 67, 54, 0.3);
+            color: #ef9a9a;
+        }
+        
+        .status-broken {
+            background-color: rgba(158, 158, 158, 0.3);
+            color: #e0e0e0;
+        }
+        
+        .timer {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .button-disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+        }
+        
+        .button-disabled:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">DOBIABU</div>
+        <div class="subtitle">WASHER & DRYER</div>
+    </div>
+    
+    <div class="machines-container">
+        <div class="glass-card" id="machine1-card">
+            <h3 class="machine-title">MESIN 1</h3>
+            <div class="machine-weight">15KG</div>
+            <div class="status status-available" id="status1">AVAILABLE</div>
+            <a href="bayar.html?machine=1" class="button" onclick="startMachine(1)">PILIH</a>
+            <div class="timer" id="timer1">00:00</div>
+        </div>
+        
+        <div class="glass-card" id="machine2-card">
+            <h3 class="machine-title">MESIN 2</h3>
+            <div class="machine-weight">10KG</div>
+            <div class="status status-available" id="status2">AVAILABLE</div>
+            <a href="bayar.html?machine=2" class="button" onclick="startMachine(2)">PILIH</a>
+            <div class="timer" id="timer2">00:00</div>
+        </div>
+        
+        <div class="glass-card" id="machine3-card">
+            <h3 class="machine-title">MESIN 3</h3>
+            <div class="status status-broken" id="status3">ROSAK</div>
+            <div class="button button-disabled">PILIH</div>
+        </div>
+        
+        <div class="glass-card" id="machine4-card">
+            <h3 class="machine-title">MESIN 4</h3>
+            <div class="status status-broken" id="status4">ROSAK</div>
+            <div class="button button-disabled">PILIH</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Sistem Dobi Moden &copy; 2023
+    </div>
+
+    <script>
+        // Mesin status dan timer
+        let machines = {
+            1: {status: "available", sec: 0, interval: null},
+            2: {status: "available", sec: 0, interval: null},
+            3: {status: "broken", sec: 0, interval: null},
+            4: {status: "broken", sec: 0, interval: null}
+        };
+
+        function startMachine(id) {
+            if (machines[id].status === "unavailable" || machines[id].status === "broken") {
+                alert("Mesin tidak boleh digunakan!");
+                return false;
+            }
+            
+            machines[id].status = "unavailable";
+            document.getElementById("status" + id).innerText = "UNAVAILABLE";
+            document.getElementById("status" + id).className = "status status-unavailable";
+            
+            // Timer
+            machines[id].interval = setInterval(() => {
+                machines[id].sec++;
+                let m = String(Math.floor(machines[id].sec / 60)).padStart(2, '0');
+                let s = String(machines[id].sec % 60).padStart(2, '0');
+                document.getElementById("timer" + id).innerText = m + ":" + s;
+            }, 1000);
+            
+            return true;
+        }
+    </script>
+</body>
+</html>
