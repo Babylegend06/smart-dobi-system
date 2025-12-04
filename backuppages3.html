@@ -1,1 +1,149 @@
 
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOBIABU - Arahan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .instructions-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .instructions-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .machine-number {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .instruction-step {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            text-align: left;
+            padding-left: 20px;
+        }
+        
+        .thank-you {
+            font-size: 1.5rem;
+            margin: 30px 0;
+            color: #a5d6a7;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">DOBIABU</div>
+        <div class="subtitle">TERIMA KASIH ATAS PEMBAYARAN</div>
+    </div>
+    
+    <div class="instructions-container">
+        <h2 class="instructions-title">Arahan Penggunaan</h2>
+        
+        <div class="machine-number">Mesin <span id="machine-num"></span></div>
+        
+        <div class="instruction-step">1️⃣ Masukkan pakaian anda ke mesin.</div>
+        <div class="instruction-step">2️⃣ Tekan button START fizikal pada mesin.</div>
+        
+        <div class="thank-you">Terima kasih kerana menggunakan Smart Dobi!</div>
+        
+        <button onclick="back()" class="button">KEMBALI KE PILIH MESIN</button>
+    </div>
+    
+    <div class="footer">
+        Sistem Dobi Moden &copy; 2023
+    </div>
+
+    <script>
+        const url = new URL(window.location.href);
+        const machine = url.searchParams.get("machine");
+        document.getElementById("machine-num").innerText = machine;
+
+        function back() {
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
