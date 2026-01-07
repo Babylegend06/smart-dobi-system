@@ -6,7 +6,6 @@
   <title>DOBIABU - Pembayaran</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
-    /* (Sama seperti CSS asal anda – dikecilkan untuk ruang) */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Fredoka One', cursive;
@@ -100,25 +99,23 @@
     const url = new URL(window.location.href);
     const machine = url.searchParams.get("machine") || "1";
 
-    // Muat nombor dari localStorage
     const saved = localStorage.getItem('dobi_whatsapp');
     if (saved) document.getElementById('whatsapp-number').value = saved;
 
     function approve() {
       const waInput = document.getElementById('whatsapp-number').value.trim();
-      const cleanWa = waInput.replace(/\D/g, ''); // hanya nombor
+      const cleanWa = waInput.replace(/\D/g, '');
 
       if (cleanWa && !/^\d{9,12}$/.test(cleanWa)) {
         alert("Nombor WhatsApp tidak sah!");
         return;
       }
 
-      // Simpan ke Firebase
       update(ref(db, `machines/${machine}`), {
         status: "washing",
         whatsapp: cleanWa || null,
         started_at: Date.now(),
-        timer: 180, // 3 minit
+        timer: 180,
         price: machine == "1" ? 5.00 : 3.00
       }).then(() => {
         if (cleanWa) localStorage.setItem('dobi_whatsapp', cleanWa);
