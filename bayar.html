@@ -17,7 +17,7 @@
       align-items: center;
       padding: 20px;
     }
-    .header, .payment-container, .whatsapp-section { text-align: center; }
+    .header, .payment-container { text-align: center; }
     .payment-container {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
@@ -29,7 +29,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     .qr-code { width: 200px; height: 200px; margin: 20px auto; background: white; padding: 15px; border-radius: 10px; }
-    .status-text { padding: 10px 20px; border-radius: 50px; display: inline-block; }
+    .status-text { padding: 10px 20px; border-radius: 50px; display: inline-block; background: rgba(244,67,54,0.3); color: #ef9a9a; }
     .status-paid { background: rgba(76,175,80,0.3); color: #a5d6a7; }
     .whatsapp-input {
       width: 100%; padding: 12px; margin: 10px 0;
@@ -62,16 +62,16 @@
   </div>
 
   <div class="payment-container">
-    <h2 class="payment-title">Imbas QR & Bayar</h2>
+    <h2>Imbas QR & Bayar</h2>
     <div class="qr-code">
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=DOBIABU_DEMO_PAYMENT" alt="QR" style="width:100%">
     </div>
     <p>Status: <span id="status-text" class="status-text">Belum dibayar</span></p>
 
-    <div class="whatsapp-section">
-      <div class="whatsapp-title">NOTIFIKASI WHATSAPP</div>
+    <div style="margin:25px 0; padding:20px; background:rgba(255,255,255,0.1); border-radius:15px; text-align:left;">
+      <div style="font-size:1.3rem; margin-bottom:15px; text-align:center;">NOTIFIKASI WHATSAPP</div>
       <input type="text" id="whatsapp-number" class="whatsapp-input" placeholder="0189892155">
-      <div style="font-size:0.9rem; opacity:0.8; margin-top:10px;">
+      <div style="font-size:0.9rem; opacity:0.8; margin-top:10px; text-align:center;">
         Biarkan kosong jika tidak mahu notifikasi
       </div>
     </div>
@@ -119,17 +119,14 @@
         price: machine == "1" ? 5.00 : 3.00
       }).then(() => {
         if (cleanWa) localStorage.setItem('dobi_whatsapp', cleanWa);
-        else localStorage.removeItem('dobi_whatsapp');
-
         document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
         document.getElementById("status-text").className = "status-text status-paid";
-
         setTimeout(() => {
           window.location.href = `page3.html?machine=${machine}`;
         }, 1500);
       }).catch(err => {
         console.error(err);
-        alert("Gagal hantar ke sistem. Cuba lagi.");
+        alert("Ralat sistem. Cuba lagi.");
       });
     }
   </script>
