@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -145,16 +144,11 @@
       onValue(ref(db, `machines/${m.id}`), (snapshot) => {
         const data = snapshot.val();
         if (!data) {
-          statusEl.innerText = "UNKNOWN";
-          statusEl.className = "status status-broken";
-          if (btn) btn.classList.add("button-disabled");
-          return;
-        }
-        if (data.status === "broken") {
           statusEl.innerText = "ROSAK";
           statusEl.className = "status status-broken";
-          if (btn) btn.classList.add("button-disabled");
-        } else if (data.status === "washing") {
+          return;
+        }
+        if (data.status === "washing") {
           statusEl.innerText = "UNAVAILABLE";
           statusEl.className = "status status-unavailable";
           if (btn) btn.classList.add("button-disabled");
