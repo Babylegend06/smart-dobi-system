@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DOBIABU - Pembayaran</title>
+  <title>DOBIABU - Bayar</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -17,66 +17,44 @@
       align-items: center;
       padding: 20px;
     }
-    .header, .payment-container { text-align: center; }
-    .payment-container {
+    .container {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
-      border-radius: 20px;
       padding: 30px;
       width: 90%;
       max-width: 500px;
-      margin-bottom: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-radius: 20px;
+      text-align: center;
     }
-    .qr-code { width: 200px; height: 200px; margin: 20px auto; background: white; padding: 15px; border-radius: 10px; }
-    .status-text { padding: 10px 20px; border-radius: 50px; display: inline-block; background: rgba(244,67,54,0.3); color: #ef9a9a; }
-    .status-paid { background: rgba(76,175,80,0.3); color: #a5d6a7; }
-    .whatsapp-input {
-      width: 100%; padding: 12px; margin: 10px 0;
+    .button {
+      padding: 15px 30px;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.3);
       border-radius: 10px;
       color: white;
       font-family: inherit;
     }
-    .button {
-      display: inline-block;
-      padding: 15px 30px;
-      margin: 10px;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: inherit;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-    .button:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">DOBIABU</div>
-    <div class="subtitle">PEMBAYARAN</div>
-  </div>
-
-  <div class="payment-container">
-    <h2>Imbas QR & Bayar</h2>
-    <div class="qr-code">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=DOBIABU_DEMO_PAYMENT" alt="QR" style="width:100%">
-    </div>
-    <p>Status: <span id="status-text" class="status-text">Belum dibayar</span></p>
-
-    <div style="margin:25px 0; padding:20px; background:rgba(255,255,255,0.1); border-radius:15px; text-align:left;">
-      <div style="font-size:1.3rem; margin-bottom:15px; text-align:center;">NOTIFIKASI WHATSAPP</div>
-      <input type="text" id="whatsapp-number" class="whatsapp-input" placeholder="0189892155">
-      <div style="font-size:0.9rem; opacity:0.8; margin-top:10px; text-align:center;">
-        Biarkan kosong jika tidak mahu notifikasi
-      </div>
-    </div>
-
-    <button onclick="approve()" class="button">APPROVE</button>
+  <div class="container">
+    <h2>Bayar untuk Mesin <span id="machine-id">1</span></h2>
+    <p>Masukkan nombor WhatsApp untuk notifikasi:</p>
+    <input type="text" id="wa" placeholder="0189892155">
+    <button class="button" onclick="approve()">APPROVE</button>
   </div>
 
   <script type="module">
@@ -98,35 +76,16 @@
 
     const url = new URL(window.location.href);
     const machine = url.searchParams.get("machine") || "1";
-
-    const saved = localStorage.getItem('dobi_whatsapp');
-    if (saved) document.getElementById('whatsapp-number').value = saved;
+    document.getElementById("machine-id").innerText = machine;
 
     function approve() {
-      const waInput = document.getElementById('whatsapp-number').value.trim();
-      const cleanWa = waInput.replace(/\D/g, '');
-
-      if (cleanWa && !/^\d{9,12}$/.test(cleanWa)) {
-        alert("Nombor WhatsApp tidak sah!");
-        return;
-      }
-
+      const wa = document.getElementById("wa").value.trim().replace(/\D/g, '');
       update(ref(db, `machines/${machine}`), {
         status: "washing",
-        whatsapp: cleanWa || null,
-        started_at: Date.now(),
-        timer: 180,
-        price: machine == "1" ? 5.00 : 3.00
+        whatsapp: wa || null
       }).then(() => {
-        if (cleanWa) localStorage.setItem('dobi_whatsapp', cleanWa);
-        document.getElementById("status-text").innerText = "SUDAH DIBAYAR";
-        document.getElementById("status-text").className = "status-text status-paid";
-        setTimeout(() => {
-          window.location.href = `page3.html?machine=${machine}`;
-        }, 1500);
-      }).catch(err => {
-        console.error(err);
-        alert("Ralat sistem. Cuba lagi.");
+        alert("Berjaya! Kembali ke mesin...");
+        window.location.href = "index.html";
       });
     }
   </script>
