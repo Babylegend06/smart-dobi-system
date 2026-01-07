@@ -6,13 +6,11 @@
     <title>DOBIABU - Arahan</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: 'Fredoka One', cursive;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -23,14 +21,12 @@
             align-items: center;
             padding: 20px;
         }
-        
         .header {
             width: 100%;
             text-align: center;
             margin-bottom: 30px;
             padding: 20px 0;
         }
-        
         .logo {
             font-size: 3.5rem;
             font-weight: bold;
@@ -38,12 +34,10 @@
             text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
             margin-bottom: 10px;
         }
-        
         .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
         }
-        
         .instructions-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -56,12 +50,10 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
         }
-        
         .instructions-title {
             font-size: 1.8rem;
             margin-bottom: 20px;
         }
-        
         .machine-number {
             font-size: 1.5rem;
             margin-bottom: 25px;
@@ -70,20 +62,17 @@
             border-radius: 50px;
             display: inline-block;
         }
-        
         .instruction-step {
             font-size: 1.2rem;
             margin: 15px 0;
             text-align: left;
             padding-left: 20px;
         }
-        
         .thank-you {
             font-size: 1.5rem;
             margin: 30px 0;
             color: #a5d6a7;
         }
-        
         .button {
             display: inline-block;
             padding: 15px 30px;
@@ -98,12 +87,10 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
         }
-        
         .footer {
             margin-top: 20px;
             text-align: center;
@@ -120,25 +107,21 @@
     
     <div class="instructions-container">
         <h2 class="instructions-title">Arahan Penggunaan</h2>
-        
         <div class="machine-number">Mesin <span id="machine-num"></span></div>
-        
         <div class="instruction-step">1️⃣ Masukkan pakaian anda ke mesin.</div>
         <div class="instruction-step">2️⃣ Tekan button START fizikal pada mesin.</div>
-        
         <div class="thank-you">Terima kasih kerana menggunakan Smart Dobi!</div>
-        
         <button onclick="back()" class="button">KEMBALI KE PILIH MESIN</button>
     </div>
     
     <div class="footer">
-        Sistem Dobi Moden &copy; 2023
+        Sistem Dobi Moden &copy; 2026
     </div>
 
     <script>
         const url = new URL(window.location.href);
         const machine = url.searchParams.get("machine");
-        document.getElementById("machine-num").innerText = machine;
+        document.getElementById("machine-num").innerText = machine || "1";
 
         function back() {
             window.location.href = "index.html";
