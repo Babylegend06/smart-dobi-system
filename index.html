@@ -58,9 +58,7 @@
       width: 280px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
     }
-    .glass-card:hover { transform: translateY(-5px); }
     .machine-title { font-size: 1.5rem; margin-bottom: 10px; }
     .machine-weight { font-size: 1rem; margin-bottom: 10px; opacity: 0.8; }
     .status {
@@ -72,9 +70,8 @@
       display: inline-block;
     }
     .status-available { background: rgba(76,175,80,0.3); color: #a5d6a7; }
-    .status-in_use { background: rgba(255,193,7,0.3); color: #ffe082; }
+    .status-unavailable { background: rgba(244,67,54,0.3); color: #ef9a9a; }
     .status-broken { background: rgba(158,158,158,0.3); color: #e0e0e0; }
-    .timer { font-size: 1.3rem; margin: 15px 0; font-family: monospace; }
     .button {
       display: inline-block;
       padding: 12px 25px;
@@ -105,11 +102,32 @@
   <div class="header">
     <div class="logo">DOBIABU</div>
     <div class="subtitle">WASHER & DRYER</div>
-    <button class="dashboard-btn" onclick="goToDashboard()">DASHBOARD PEMILIK</button>
+    <button class="dashboard-btn" onclick="window.location.href='owner.html'">DASHBOARD PEMILIK</button>
   </div>
 
-  <div class="machines-container" id="machines-container">
-    <!-- Akan diisi oleh JavaScript -->
+  <div class="machines-container">
+    <div class="glass-card">
+      <h3 class="machine-title">MESIN 1</h3>
+      <div class="machine-weight">15KG</div>
+      <div class="status status-available" id="status1">SEDIA</div>
+      <a href="bayar.html?machine=1" class="button" id="btn1">PILIH</a>
+    </div>
+    <div class="glass-card">
+      <h3 class="machine-title">MESIN 2</h3>
+      <div class="machine-weight">10KG</div>
+      <div class="status status-available" id="status2">SEDIA</div>
+      <a href="bayar.html?machine=2" class="button" id="btn2">PILIH</a>
+    </div>
+    <div class="glass-card">
+      <h3 class="machine-title">MESIN 3</h3>
+      <div class="status status-broken">ROSAK</div>
+      <div class="button button-disabled">PILIH</div>
+    </div>
+    <div class="glass-card">
+      <h3 class="machine-title">MESIN 4</h3>
+      <div class="status status-broken">ROSAK</div>
+      <div class="button button-disabled">PILIH</div>
+    </div>
   </div>
 
   <script type="module">
@@ -129,74 +147,29 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const machines = [
-      { id: 1, weight: "15KG", active: true },
-      { id: 2, weight: "10KG", active: true },
-      { id: 3, weight: null, active: false },
-      { id: 4, weight: null, active: false }
-    ];
-
-    const container = document.getElementById("machines-container");
-
-    machines.forEach(m => {
-      const card = document.createElement("div");
-      card.className = "glass-card";
-      card.id = `machine${m.id}-card`;
-
-      const weightHtml = m.weight ? `<div class="machine-weight">${m.weight}</div>` : '';
-      const button = m.active 
-        ? `<a href="bayar.html?machine=${m.id}" class="button" id="btn${m.id}">PILIH</a>`
-        : `<div class="button button-disabled">PILIH</div>`;
-
-      card.innerHTML = `
-        <h3 class="machine-title">MESIN ${m.id}</h3>
-        ${weightHtml}
-        <div class="status" id="status${m.id}">LOADING...</div>
-        ${button}
-        <div class="timer" id="timer${m.id}">--:--</div>
-      `;
-      container.appendChild(card);
-    });
-
-    machines.forEach(m => {
-      const statusEl = document.getElementById(`status${m.id}`);
-      const timerEl = document.getElementById(`timer${m.id}`);
-      const btn = document.getElementById(`btn${m.id}`);
-
-      onValue(ref(db, `machines/${m.id}`), (snapshot) => {
+    function updateStatus(id) {
+      const statusEl = document.getElementById(`status${id}`);
+      const btn = document.getElementById(`btn${id}`);
+      onValue(ref(db, `machines/${id}`), (snapshot) => {
         const data = snapshot.val();
-        if (!data || data.status === "broken") {
+        if (!data || data.status === "in_use" || data.status === "washing") {
+          statusEl.innerText = "SEDANG GUNA";
+          statusEl.className = "status status-unavailable";
+          if (btn) btn.classList.add("button-disabled");
+        } else if (data.status === "broken") {
           statusEl.innerText = "ROSAK";
           statusEl.className = "status status-broken";
-          timerEl.innerText = "--:--";
-          if (btn) btn.classList.add("button-disabled");
-          return;
-        }
-
-        if (data.status === "in_use") {
-          statusEl.innerText = "SEDANG GUNA";
-          statusEl.className = "status status-in_use";
-          
-          const now = Date.now();
-          const endTime = data.started_at + (data.timer_seconds || 180) * 1000;
-          const remaining = Math.max(0, endTime - now);
-          const mins = Math.floor(remaining / 60000);
-          const secs = Math.floor((remaining % 60000) / 1000);
-          timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-          
           if (btn) btn.classList.add("button-disabled");
         } else {
           statusEl.innerText = "SEDIA";
           statusEl.className = "status status-available";
-          timerEl.innerText = "--:--";
           if (btn) btn.classList.remove("button-disabled");
         }
       });
-    });
-
-    function goToDashboard() {
-      window.location.href = "owner.html";
     }
+
+    updateStatus(1);
+    updateStatus(2);
   </script>
 </body>
 </html>
