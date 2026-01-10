@@ -48,7 +48,8 @@
             width:100%; padding:12px 15px; margin:10px 0;
             border-radius:10px; border:1px solid rgba(255,255,255,0.3);
             background:rgba(255,255,255,0.1); color:white;
-            font-size:1rem; font-family:'Fredoka One', cursive;
+            font-size:1rem;
+            font-family:'Fredoka One', cursive;
         }
         .button {
             display:inline-block; padding:15px 30px; margin:10px;
@@ -60,6 +61,11 @@
         }
         .button:hover { background:rgba(255,255,255,0.3); transform:scale(1.05); }
         .footer { margin-top:20px; text-align:center; font-size:0.9rem; opacity:0.7; }
+        #error-msg {
+          color: #ff9e9e;
+          margin-top: 10px;
+          font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -81,6 +87,7 @@
         </div>
         
         <button onclick="bayar()" class="button">BAYAR</button>
+        <div id="error-msg"></div>
     </div>
     
     <div class="footer">Sistem Dobi Moden &copy; 2026</div>
@@ -99,23 +106,43 @@
             appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        let db;
+        try {
+          const app = initializeApp(firebaseConfig);
+          db = getDatabase(app);
+        } catch (e) {
+          document.getElementById('error-msg').innerText = 'Ralat sistem. Cuba lagi nanti.';
+          return;
+        }
+
         const url = new URL(window.location.href);
         const machine = url.searchParams.get("machine") || "1";
+        if (!["1", "2"].includes(machine)) {
+          alert("Mesin tidak sah.");
+          window.location.href = "index.html";
+        }
 
         function bayar() {
-            const wa = document.getElementById('whatsapp-number').value.trim().replace(/\D/g, '');
+            const waInput = document.getElementById('whatsapp-number').value.trim();
+            const cleanWa = waInput.replace(/\D/g, '');
+            
+            if (cleanWa && !/^\d{9,12}$/.test(cleanWa)) {
+                document.getElementById('error-msg').innerText = "Nombor WhatsApp tidak sah!";
+                return;
+            }
+
             update(ref(db, `machines/${machine}`), {
                 status: "ready",
-                whatsapp: wa || null
+                whatsapp: cleanWa || null
             }).then(() => {
                 document.getElementById("status-label").innerText = "SUDAH DIBAYAR";
                 document.getElementById("status-label").className = "status-label status-paid";
-                setTimeout(() => window.location.href = `page3.html?machine=${machine}`, 1500);
+                setTimeout(() => {
+                    window.location.href = `page3.html?machine=${machine}`;
+                }, 1500);
             }).catch(err => {
-                alert("Gagal. Cuba lagi.");
                 console.error(err);
+                document.getElementById('error-msg').innerText = "Gagal hantar ke sistem. Cuba lagi.";
             });
         }
     </script>
