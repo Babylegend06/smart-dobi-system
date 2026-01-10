@@ -6,7 +6,6 @@
   <title>DOBIABU - Pilih Mesin</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
-    /* (Gaya sama seperti sebelum ini - glass, gradient, dll) */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Fredoka One', cursive;
@@ -18,40 +17,64 @@
       align-items: center;
       padding: 20px;
     }
-    .header { text-align: center; margin-bottom: 30px; }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+      width: 100%;
+    }
     .logo { font-size: 3.5rem; letter-spacing: 2px; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 10px; }
     .subtitle { font-size: 1.2rem; opacity: 0.9; }
     .dashboard-btn {
       margin-top: 15px;
-      padding: 8px 20px;
+      padding: 10px 25px;
       background: rgba(255,255,255,0.2);
       color: white;
       border: 1px solid rgba(255,255,255,0.3);
       border-radius: 50px;
       font-family: inherit;
+      font-size: 1.1rem;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    .dashboard-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
     }
     .machines-container {
       display: flex;
-      gap: 30px;
       flex-wrap: wrap;
       justify-content: center;
-      max-width: 800px;
+      gap: 25px;
+      max-width: 1200px;
+      width: 100%;
     }
     .glass-card {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
       border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 25px;
       width: 280px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
     }
-    .status { font-size: 1.2rem; margin: 15px 0; padding: 8px 15px; border-radius: 50px; display: inline-block; }
+    .glass-card:hover { transform: translateY(-5px); }
+    .machine-title { font-size: 1.5rem; margin-bottom: 10px; }
+    .machine-weight { font-size: 1rem; margin-bottom: 10px; opacity: 0.8; }
+    .status {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 15px 0;
+      padding: 8px 15px;
+      border-radius: 50px;
+      display: inline-block;
+    }
     .status-available { background: rgba(76,175,80,0.3); color: #a5d6a7; }
     .status-in_use { background: rgba(255,193,7,0.3); color: #ffe082; }
     .status-broken { background: rgba(158,158,158,0.3); color: #e0e0e0; }
-    .timer { font-size: 1.3rem; font-family: monospace; margin: 10px 0; }
+    .timer { font-size: 1.3rem; margin: 15px 0; font-family: monospace; }
     .button {
       display: inline-block;
       padding: 12px 25px;
@@ -62,7 +85,19 @@
       border-radius: 50px;
       border: 1px solid rgba(255,255,255,0.3);
       font-family: inherit;
+      font-size: 1rem;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    .button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    .button-disabled {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      cursor: not-allowed;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -70,11 +105,11 @@
   <div class="header">
     <div class="logo">DOBIABU</div>
     <div class="subtitle">WASHER & DRYER</div>
-    <button class="dashboard-btn" onclick="goToDashboard()">DASHBOARD</button>
+    <button class="dashboard-btn" onclick="goToDashboard()">DASHBOARD PEMILIK</button>
   </div>
 
   <div class="machines-container" id="machines-container">
-    <!-- Diisi oleh JavaScript -->
+    <!-- Akan diisi oleh JavaScript -->
   </div>
 
   <script type="module">
@@ -94,35 +129,47 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const machines = [1, 2];
+    const machines = [
+      { id: 1, weight: "15KG", active: true },
+      { id: 2, weight: "10KG", active: true },
+      { id: 3, weight: null, active: false },
+      { id: 4, weight: null, active: false }
+    ];
+
     const container = document.getElementById("machines-container");
 
-    // Render mesin
-    machines.forEach(id => {
+    machines.forEach(m => {
       const card = document.createElement("div");
       card.className = "glass-card";
+      card.id = `machine${m.id}-card`;
+
+      const weightHtml = m.weight ? `<div class="machine-weight">${m.weight}</div>` : '';
+      const button = m.active 
+        ? `<a href="bayar.html?machine=${m.id}" class="button" id="btn${m.id}">PILIH</a>`
+        : `<div class="button button-disabled">PILIH</div>`;
+
       card.innerHTML = `
-        <h3>MESIN ${id}</h3>
-        <div class="status" id="status${id}">LOADING...</div>
-        <div class="timer" id="timer${id}">--:--</div>
-        <a href="bayar.html?machine=${id}" class="button" id="btn${id}">PILIH</a>
+        <h3 class="machine-title">MESIN ${m.id}</h3>
+        ${weightHtml}
+        <div class="status" id="status${m.id}">LOADING...</div>
+        ${button}
+        <div class="timer" id="timer${m.id}">--:--</div>
       `;
       container.appendChild(card);
     });
 
-    // Dengar perubahan real-time
-    machines.forEach(id => {
-      const statusEl = document.getElementById(`status${id}`);
-      const timerEl = document.getElementById(`timer${id}`);
-      const btn = document.getElementById(`btn${id}`);
+    machines.forEach(m => {
+      const statusEl = document.getElementById(`status${m.id}`);
+      const timerEl = document.getElementById(`timer${m.id}`);
+      const btn = document.getElementById(`btn${m.id}`);
 
-      onValue(ref(db, `machines/${id}`), (snapshot) => {
+      onValue(ref(db, `machines/${m.id}`), (snapshot) => {
         const data = snapshot.val();
         if (!data || data.status === "broken") {
           statusEl.innerText = "ROSAK";
           statusEl.className = "status status-broken";
           timerEl.innerText = "--:--";
-          if (btn) btn.style.pointerEvents = "none";
+          if (btn) btn.classList.add("button-disabled");
           return;
         }
 
@@ -130,7 +177,6 @@
           statusEl.innerText = "SEDANG GUNA";
           statusEl.className = "status status-in_use";
           
-          // Kira timer masa nyata
           const now = Date.now();
           const endTime = data.started_at + (data.timer_seconds || 180) * 1000;
           const remaining = Math.max(0, endTime - now);
@@ -138,12 +184,12 @@
           const secs = Math.floor((remaining % 60000) / 1000);
           timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
           
-          if (btn) btn.style.pointerEvents = "none";
+          if (btn) btn.classList.add("button-disabled");
         } else {
           statusEl.innerText = "SEDIA";
           statusEl.className = "status status-available";
           timerEl.innerText = "--:--";
-          if (btn) btn.style.pointerEvents = "auto";
+          if (btn) btn.classList.remove("button-disabled");
         }
       });
     });
