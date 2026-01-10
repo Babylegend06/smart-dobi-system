@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOBIABU - Pilih Mesin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -17,27 +19,54 @@
       align-items: center;
       padding: 20px;
     }
-    .header { text-align: center; margin-bottom: 30px; }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+    }
     .logo { font-size: 3.5rem; letter-spacing: 2px; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 10px; }
     .subtitle { font-size: 1.2rem; opacity: 0.9; }
+    .dashboard-btn {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .dashboard-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
     .machines-container {
       display: flex;
-      gap: 30px;
       flex-wrap: wrap;
       justify-content: center;
-      max-width: 800px;
+      gap: 25px;
+      max-width: 1200px;
+      width: 100%;
     }
     .glass-card {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
       border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 25px;
       width: 280px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
     }
+    .glass-card:hover { transform: translateY(-5px); }
+    .machine-title { font-size: 1.5rem; margin-bottom: 10px; }
+    .machine-weight { font-size: 1rem; margin-bottom: 10px; opacity: 0.8; }
     .status {
       font-size: 1.2rem;
+      font-weight: bold;
       margin: 15px 0;
       padding: 8px 15px;
       border-radius: 50px;
@@ -45,6 +74,7 @@
     }
     .status-available { background: rgba(76,175,80,0.3); color: #a5d6a7; }
     .status-unavailable { background: rgba(244,67,54,0.3); color: #ef9a9a; }
+    .status-broken { background: rgba(158,158,158,0.3); color: #e0e0e0; }
     .button {
       display: inline-block;
       padding: 12px 25px;
@@ -57,6 +87,17 @@
       font-family: inherit;
       font-size: 1rem;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    .button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    .button-disabled {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      cursor: not-allowed;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -64,16 +105,19 @@
   <div class="header">
     <div class="logo">DOBIABU</div>
     <div class="subtitle">WASHER & DRYER</div>
+    <button class="dashboard-btn" onclick="goToDashboard()">DASHBOARD</button>
   </div>
 
   <div class="machines-container">
     <div class="glass-card">
-      <h3>MESIN 1</h3>
+      <h3 class="machine-title">MESIN 1</h3>
+      <div class="machine-weight">15KG</div>
       <div class="status" id="status1">LOADING...</div>
       <a href="bayar.html?machine=1" class="button" id="btn1">PILIH</a>
     </div>
     <div class="glass-card">
-      <h3>MESIN 2</h3>
+      <h3 class="machine-title">MESIN 2</h3>
+      <div class="machine-weight">10KG</div>
       <div class="status" id="status2">LOADING...</div>
       <a href="bayar.html?machine=2" class="button" id="btn2">PILIH</a>
     </div>
@@ -104,19 +148,21 @@
         if (!data || data.status === "washing") {
           statusEl.innerText = "UNAVAILABLE";
           statusEl.className = "status status-unavailable";
-          if (btn) btn.style.pointerEvents = "none";
-          if (btn) btn.style.opacity = "0.5";
+          if (btn) btn.classList.add("button-disabled");
         } else {
           statusEl.innerText = "AVAILABLE";
           statusEl.className = "status status-available";
-          if (btn) btn.style.pointerEvents = "auto";
-          if (btn) btn.style.opacity = "1";
+          if (btn) btn.classList.remove("button-disabled");
         }
       });
     }
 
     updateStatus(1);
     updateStatus(2);
+
+    function goToDashboard() {
+      window.location.href = "owner.html";
+    }
   </script>
 </body>
 </html>
