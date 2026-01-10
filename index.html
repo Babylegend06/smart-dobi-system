@@ -96,6 +96,11 @@
       cursor: not-allowed;
       pointer-events: none;
     }
+    #error-msg {
+      color: #ff9e9e;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -104,6 +109,8 @@
     <div class="subtitle">WASHER & DRYER</div>
     <button class="dashboard-btn" onclick="window.location.href='owner.html'">DASHBOARD PEMILIK</button>
   </div>
+
+  <div id="error-msg"></div>
 
   <div class="machines-container">
     <div class="glass-card">
@@ -144,8 +151,16 @@
       appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    let db;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      document.getElementById('error-msg').innerText = '';
+    } catch (e) {
+      document.getElementById('error-msg').innerText = 'Ralat: Firebase gagal muat. Sila muat semula.';
+      console.error(e);
+      return;
+    }
 
     function updateStatus(id) {
       const statusEl = document.getElementById(`status${id}`);
@@ -165,6 +180,9 @@
           statusEl.className = "status status-available";
           if (btn) btn.classList.remove("button-disabled");
         }
+      }, (error) => {
+        console.error("Firebase error:", error);
+        document.getElementById('error-msg').innerText = 'Sambungan ke sistem gagal. Cuba lagi nanti.';
       });
     }
 
