@@ -67,9 +67,7 @@
     <script>
         const url = new URL(window.location.href);
         const machine = url.searchParams.get("machine") || "1";
-        if (!["1", "2"].includes(machine)) {
-          window.location.href = "index.html";
-        }
+        if (!["1", "2"].includes(machine)) window.location.href = "index.html";
         document.getElementById("machine-num").innerText = machine;
     </script>
 </body>
