@@ -54,3 +54,45 @@
     .back-btn:hover {
       color: white;
     }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">DOBIABU</div>
+    <div class="subtitle">OWNER LOGIN</div>
+    <button class="login-btn" id="google-login">LOGIN DENGAN GOOGLE</button>
+    <a href="index.html" class="back-btn">← KEMBALI KE KIOSK</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+      authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+      databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-dobi-system-fyp",
+      storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+      messagingSenderId: "377544234994",
+      appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('google-login').addEventListener('click', () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // Redirect ke dashboard selepas login
+          window.location.href = "owner.html";
+        })
+        .catch((error) => {
+          alert("Gagal log masuk. Cuba lagi.");
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>
