@@ -6,7 +6,6 @@
   <title>DOBIABU - Pilih Mesin</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
-    /* ... (gaya CSS sama seperti sebelum ini) ... */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Fredoka One', cursive;
@@ -92,30 +91,11 @@
     };
 
     let db;
-    let reconnectAttempts = 0;
-    const MAX_RECONNECT = 5;
-
-    function initFirebase() {
-      try {
-        const app = initializeApp(firebaseConfig);
-        db = getDatabase(app);
-        console.log("✅ Firebase sambung");
-        reconnectAttempts = 0;
-        setupListeners();
-      } catch (e) {
-        console.error("❌ Gagal sambung Firebase:", e);
-        if (reconnectAttempts < MAX_RECONNECT) {
-          reconnectAttempts++;
-          console.log(`🔁 Cuba semula (${reconnectAttempts}/${MAX_RECONNECT})...`);
-          setTimeout(initFirebase, 3000);
-        }
-      }
-    }
-
-    function setupListeners() {
-      updateStatus(1);
-      updateStatus(2);
-      monitorESP32();
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+    } catch (e) {
+      console.error("Firebase init error:", e);
     }
 
     function updateStatus(id) {
@@ -135,11 +115,6 @@
           statusEl.innerText = "SEDIA";
           statusEl.className = "status status-available";
           if (btn) btn.classList.remove("button-disabled");
-        }
-      }, (error) => {
-        console.error("Ralat Firebase:", error);
-        if (reconnectAttempts < MAX_RECONNECT) {
-          initFirebase();
         }
       });
     }
@@ -165,7 +140,9 @@
       });
     }
 
-    initFirebase();
+    updateStatus(1);
+    updateStatus(2);
+    monitorESP32();
   </script>
 </body>
 </html>
