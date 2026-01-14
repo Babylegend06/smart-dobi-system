@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DOBIABU - Pilih Mesin</title>
+  <title>DOBIABU - Owner Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -13,72 +13,47 @@
       color: white;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
       padding: 20px;
     }
-    .header { text-align: center; margin-bottom: 30px; padding: 20px 0; width: 100%; }
-    .logo { font-size: 3.5rem; letter-spacing: 2px; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 10px; }
-    .subtitle { font-size: 1.2rem; opacity: 0.9; }
-    .dashboard-btn {
-      margin-top: 15px; padding: 10px 25px; background: rgba(255,255,255,0.2); color: white;
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; font-family: inherit;
-      font-size: 1.1rem; cursor: pointer; transition: all 0.3s;
+    .login-container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .machines-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; max-width: 1200px; width: 100%; }
-    .glass-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); padding: 25px; width: 280px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-    .machine-title { font-size: 1.5rem; margin-bottom: 10px; }
-    .machine-weight { font-size: 1rem; margin-bottom: 10px; opacity: 0.8; }
-    .status { font-size: 1.2rem; font-weight: bold; margin: 15px 0; padding: 8px 15px; border-radius: 50px; display: inline-block; }
-    .status-available { background: rgba(76,175,80,0.3); color: #a5d6a7; }
-    .status-unavailable { background: rgba(244,67,54,0.3); color: #ef9a9a; }
-    .status-broken { background: rgba(158,158,158,0.3); color: #e0e0e0; }
-    .button { display: inline-block; padding: 12px 25px; margin-top: 10px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 50px; border: 1px solid rgba(255,255,255,0.3); font-family: inherit; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
-    .button:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
-    .button-disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); cursor: not-allowed; pointer-events: none; }
-    #esp-status { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 3.5rem; letter-spacing: 2px; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 20px; }
+    .subtitle { font-size: 1.3rem; opacity: 0.9; margin-bottom: 30px; }
+    .login-btn {
+      background: #4285F4;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      border: none;
+      font-family: inherit;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+    }
+    .login-btn:hover { background: #357ae8; }
   </style>
 </head>
 <body>
-  <div class="header">
+  <div class="login-container">
     <div class="logo">DOBIABU</div>
-    <div class="subtitle">WASHER & DRYER</div>
-    <button class="dashboard-btn" onclick="window.location.href='owner.html'">DASHBOARD PEMILIK</button>
-  </div>
-
-  <div id="esp-status">
-    <span>ESP32:</span>
-    <span id="esp-indicator">-</span>
-  </div>
-
-  <div class="machines-container">
-    <div class="glass-card">
-      <h3 class="machine-title">MESIN 1</h3>
-      <div class="machine-weight">15KG</div>
-      <div class="status status-available" id="status1">SEDIA</div>
-      <a href="bayar.html?machine=1" class="button" id="btn1">PILIH</a>
-    </div>
-    <div class="glass-card">
-      <h3 class="machine-title">MESIN 2</h3>
-      <div class="machine-weight">10KG</div>
-      <div class="status status-available" id="status2">SEDIA</div>
-      <a href="bayar.html?machine=2" class="button" id="btn2">PILIH</a>
-    </div>
-    <div class="glass-card">
-      <h3 class="machine-title">MESIN 3</h3>
-      <div class="status status-broken">ROSAK</div>
-      <div class="button button-disabled">PILIH</div>
-    </div>
-    <div class="glass-card">
-      <h3 class="machine-title">MESIN 4</h3>
-      <div class="status status-broken">ROSAK</div>
-      <div class="button button-disabled">PILIH</div>
-    </div>
+    <div class="subtitle">OWNER LOGIN</div>
+    <button class="login-btn" id="google-login">LOGIN DENGAN GOOGLE</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
@@ -90,59 +65,20 @@
       appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
     };
 
-    let db;
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getDatabase(app);
-    } catch (e) {
-      console.error("Firebase init error:", e);
-    }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    function updateStatus(id) {
-      const statusEl = document.getElementById(`status${id}`);
-      const btn = document.getElementById(`btn${id}`);
-      onValue(ref(db, `machines/${id}`), (snapshot) => {
-        const data = snapshot.val();
-        if (!data || data.status === "in_use" || data.status === "washing") {
-          statusEl.innerText = "SEDANG GUNA";
-          statusEl.className = "status status-unavailable";
-          if (btn) btn.classList.add("button-disabled");
-        } else if (data.status === "broken") {
-          statusEl.innerText = "ROSAK";
-          statusEl.className = "status status-broken";
-          if (btn) btn.classList.add("button-disabled");
-        } else {
-          statusEl.innerText = "SEDIA";
-          statusEl.className = "status status-available";
-          if (btn) btn.classList.remove("button-disabled");
-        }
-      });
-    }
-
-    function monitorESP32() {
-      const indicator = document.getElementById('esp-indicator');
-      onValue(ref(db, 'system/esp32_heartbeat'), (snapshot) => {
-        const lastPing = snapshot.val();
-        if (!lastPing) {
-          indicator.innerHTML = '❌ OFFLINE';
-          indicator.style.color = '#ef9a9a';
-          return;
-        }
-        const now = Date.now();
-        const diff = now - lastPing;
-        if (diff < 15000) {
-          indicator.innerHTML = '✅ ONLINE';
-          indicator.style.color = '#a5d6a7';
-        } else {
-          indicator.innerHTML = '⚠️ TIDAK RESPON';
-          indicator.style.color = '#ffe082';
-        }
-      });
-    }
-
-    updateStatus(1);
-    updateStatus(2);
-    monitorESP32();
+    document.getElementById('google-login').addEventListener('click', () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          window.location.href = "owner.html";
+        })
+        .catch((error) => {
+          alert("Gagal log masuk. Cuba lagi.");
+          console.error(error);
+        });
+    });
   </script>
 </body>
 </html>
