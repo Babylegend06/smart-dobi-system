@@ -1,267 +1,73 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOBIABU | Smart Kiosk</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* --- CSS: LIQUID GLASS THEME --- */
-        :root {
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            --text-color: #ffffff;
-            --accent-color: #00d2ff;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1, h2, p { margin: 0; }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 30px;
-            animation: fadeIn 1s ease-in;
-        }
-        
-        .header h1 { font-size: 2.5rem; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.3); }
-        .header p { opacity: 0.8; font-weight: 300; }
-
-        /* Container Mesin */
-        .machines-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
-            padding: 20px;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        /* Kad Glassmorphism */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: var(--glass-border);
-            border-radius: 20px;
-            box-shadow: var(--glass-shadow);
-            padding: 30px;
-            width: 280px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card:hover { transform: translateY(-5px); }
-
-        /* Ikon Mesin */
-        .machine-icon {
-            font-size: 4rem;
-            margin: 20px 0;
-            color: rgba(255,255,255,0.8);
-        }
-
-        /* Status Badge */
-        .status-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-available { background: rgba(46, 204, 113, 0.6); box-shadow: 0 0 10px #2ecc71; }
-        .status-ready { background: rgba(241, 196, 15, 0.6); box-shadow: 0 0 10px #f1c40f; color: #fff; }
-        .status-running { 
-            background: rgba(231, 76, 60, 0.6); 
-            box-shadow: 0 0 15px #e74c3c;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Butang */
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 1rem;
-            margin-top: 15px;
-        }
-
-        .btn-action:disabled {
-            background: #555;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .btn-action:hover:not(:disabled) {
-            box-shadow: 0 0 20px #00d2ff;
-        }
-
-        .price-tag { font-size: 1.2rem; font-weight: bold; margin-top: 10px; }
-
-        /* Loader */
-        .loading-overlay {
-            position: fixed; top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.8);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 999;
-        }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOBIABU - Kiosk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .machines-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      width: 100%;
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      margin-top: 10px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1><i class="fas fa-soap"></i> DOBIABU</h1>
-        <p>Sistem Dobi Layan Diri Pintar (FYP)</p>
+  <h1 style="margin:20px 0;">Pilih Mesin Anda</h1>  
+  <div class="machines-container">
+    <div class="glass-card">
+      <h3>Mesin 1</h3>
+      <div>15KG</div>
+      <a href="bayar.html?machine=1" class="button">PILIH</a>
     </div>
-
-    <div class="machines-container" id="machines-list">
-        <div class="glass-card">
-            <h2>Loading...</h2>
-            <p>Menghubungkan ke Firebase...</p>
-        </div>
+    <div class="glass-card">
+      <h3>Mesin 2</h3>
+      <div>10KG</div>
+      <a href="bayar.html?machine=2" class="button">PILIH</a>
     </div>
-
-    <script type="module">
-        // 1. IMPORT FIREBASE (Guna CDN version 9)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, push } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-        // 2. CONFIG FIREBASE (SILA GANTI DENGAN API ANDA)
-        const firebaseConfig = {
-            apiKey: "GANTI_API_KEY_DISINI",
-            authDomain: "smart-dobi-system-fyp.firebaseapp.com",
-            databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "smart-dobi-system-fyp",
-            storageBucket: "smart-dobi-system-fyp.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // 3. FUNGSI RENDER MESIN
-        function renderMachine(id, data) {
-            let statusText = "";
-            let statusClass = "";
-            let btnText = "";
-            let btnDisabled = false;
-            let iconClass = id == 1 ? "fa-tshirt" : "fa-wind"; // Baju untuk washer, Angin untuk dryer
-
-            // Tentukan UI berdasarkan status
-            if (data.status === 'available') {
-                statusText = "KOSONG";
-                statusClass = "status-available";
-                btnText = "PILIH & BAYAR";
-                btnDisabled = false;
-            } else if (data.status === 'ready') {
-                statusText = "SEDIA";
-                statusClass = "status-ready";
-                btnText = "SILA TEKAN BUTANG DI MESIN";
-                btnDisabled = true;
-            } else if (data.status === 'running') {
-                statusText = "SEDANG BASUH";
-                statusClass = "status-running";
-                
-                // Kira masa baki (Simulasi mudah)
-                const timeLeft = Math.max(0, Math.floor((data.endTime - (Date.now()/1000)) / 60));
-                btnText = `SIAP DALAM ${timeLeft} MIN`;
-                btnDisabled = true;
-            }
-
-            return `
-                <div class="glass-card" id="card-${id}">
-                    <div class="status-badge ${statusClass}">${statusText}</div>
-                    <h2>Mesin ${id}</h2>
-                    <div class="machine-icon"><i class="fas ${iconClass}"></i></div>
-                    <div class="price-tag">RM ${parseFloat(data.price).toFixed(2)}</div>
-                    <button class="btn-action" 
-                        onclick="initPayment(${id})" 
-                        ${btnDisabled ? 'disabled' : ''}>
-                        ${btnText}
-                    </button>
-                    ${data.status === 'running' ? '<p style="margin-top:10px; font-size:0.8rem;">Jangan buka pintu!</p>' : ''}
-                </div>
-            `;
-        }
-
-        // 4. LISTENER DATA REALTIME
-        const machinesRef = ref(db, 'machines');
-        onValue(machinesRef, (snapshot) => {
-            const container = document.getElementById('machines-list');
-            container.innerHTML = ""; // Kosongkan container
-            
-            const machines = snapshot.val();
-            if (machines) {
-                Object.keys(machines).forEach(key => {
-                    container.innerHTML += renderMachine(key, machines[key]);
-                });
-            } else {
-                container.innerHTML = "<p>Tiada data mesin dijumpai.</p>";
-            }
-        });
-
-        // 5. FUNGSI BAYAR (Global Scope)
-        window.initPayment = function(id) {
-            const phone = prompt("Masukkan No. WhatsApp untuk notifikasi (Cth: 60123456789):");
-            
-            if (phone && phone.length > 9) {
-                // Proses Bayaran (Update Firebase)
-                const updates = {};
-                updates['/machines/' + id + '/status'] = 'ready';
-                updates['/machines/' + id + '/userPhone'] = phone;
-                
-                // Tambah Log Transaksi
-                const newLogRef = push(ref(db, 'logs'));
-                updates['/logs/' + newLogRef.key] = {
-                    message: `Bayaran diterima untuk Mesin ${id} (User: ${phone})`,
-                    timestamp: Date.now(),
-                    type: "PAYMENT"
-                };
-
-                update(ref(db), updates)
-                .then(() => {
-                    alert("✅ Bayaran Berjaya! Sila tekan butang START fizikal pada mesin.");
-                })
-                .catch((error) => {
-                    alert("Ralat: " + error.message);
-                });
-            } else {
-                if(phone !== null) alert("Sila masukkan nombor telefon yang sah.");
-            }
-        }
-    </script>
+    <div class="glass-card">
+      <h3>Mesin 3</h3>
+      <div>ROSAK</div>
+    </div>
+    <div class="glass-card">
+      <h3>Mesin 4</h3>
+      <div>ROSAK</div>
+    </div>
+  </div>
 </body>
 </html>
