@@ -4,55 +4,112 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOBIABU - Arahan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Fredoka One', cursive;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #ffffff;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 24px;
     }
     .instructions-container {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
       border-radius: 20px;
-      padding: 30px;
+      padding: 32px;
       width: 90%;
-      max-width: 600px;
+      max-width: 520px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      margin-bottom: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .logo { 
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem; 
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+    .steps {
+      margin: 24px 0;
+      text-align: left;
+      padding: 0 20px;
+    }
+    .step {
+      margin: 18px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .step-number {
+      background: rgba(255, 255, 255, 0.12);
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 4px;
     }
     .button {
       display: inline-block;
-      padding: 15px 30px;
-      margin-top: 20px;
-      background: rgba(255,255,255,0.2);
+      padding: 12px 28px;
+      margin-top: 24px;
+      background: rgba(255, 255, 255, 0.12);
       color: white;
       text-decoration: none;
-      border-radius: 50px;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.2rem;
-      cursor: pointer;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.25s ease;
+    }
+    .button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    .note {
+      margin-top: 20px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
   <div class="instructions-container">
+    <div class="logo">DOBIABU</div>
     <h2>Arahan Penggunaan</h2>
-    <div style="margin:20px 0;">
-      <div>1️⃣ Masukkan pakaian anda ke mesin.</div>
-      <div>2️⃣ Tekan butang <strong>START</strong> fizikal pada mesin.</div>
-      <div style="margin-top:20px; opacity:0.8;">
-        LED akan berhenti kelip dan menyala terus apabila mesin bermula.
+    
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div>Masukkan pakaian anda ke dalam mesin dobi.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div>Tekan butang <strong>START</strong> fizikal pada mesin tersebut.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div>Tunggu sehingga proses selesai. Anda akan menerima notifikasi melalui WhatsApp apabila cucian siap.</div>
       </div>
     </div>
+    
+    <div class="note">
+      <strong>Nota:</strong> Lampu LED akan berhenti berkelip dan menyala terus apabila mesin bermula.
+    </div>
+    
     <a href="kiosk.html" class="button">KEMBALI KE KIOSK</a>
   </div>
 
