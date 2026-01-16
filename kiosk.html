@@ -4,70 +4,173 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOBIABU - Kiosk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Fredoka One', cursive;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #ffffff;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 24px;
+    }
+    .header {
+      text-align: center;
+      margin: 24px 0 32px;
+    }
+    .logo { 
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem; 
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      font-weight: 500;
     }
     .machines-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      max-width: 1200px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
       width: 100%;
     }
     .glass-card {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
       border-radius: 20px;
-      padding: 25px;
+      padding: 24px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.25s ease;
     }
+    .glass-card:hover {
+      transform: translateY(-3px);
+    }
+    .machine-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+    .machine-weight {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+    .status {
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 12px 0;
+    }
+    .status-available { background: rgba(76, 201, 240, 0.2); color: #4cc9f0; }
+    .status-unavailable { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .status-broken { background: rgba(168, 168, 168, 0.2); color: #a8a8a8; }
     .button {
       display: inline-block;
-      padding: 12px 25px;
+      padding: 10px 22px;
       margin-top: 10px;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.12);
       color: white;
       text-decoration: none;
-      border-radius: 50px;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: inherit;
-      font-size: 1rem;
-      cursor: pointer;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.25s ease;
+    }
+    .button:hover:not(.button-disabled) {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    .button-disabled {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+      pointer-events: none;
+      border-color: rgba(255, 255, 255, 0.08);
     }
   </style>
 </head>
 <body>
-  <h1 style="margin:20px 0;">Pilih Mesin Anda</h1>  
+  <div class="header">
+    <div class="logo">DOBIABU</div>
+    <div class="subtitle">Pilih Mesin Anda</div>
+  </div>
+  
   <div class="machines-container">
     <div class="glass-card">
-      <h3>Mesin 1</h3>
-      <div>15KG</div>
-      <a href="bayar.html?machine=1" class="button">PILIH</a>
+      <h3 class="machine-title">MESIN 1</h3>
+      <div class="machine-weight">Kapasiti 15KG</div>
+      <div class="status status-available" id="status1">SEDIA</div>
+      <a href="bayar.html?machine=1" class="button" id="btn1">PILIH</a>
     </div>
     <div class="glass-card">
-      <h3>Mesin 2</h3>
-      <div>10KG</div>
-      <a href="bayar.html?machine=2" class="button">PILIH</a>
+      <h3 class="machine-title">MESIN 2</h3>
+      <div class="machine-weight">Kapasiti 10KG</div>
+      <div class="status status-available" id="status2">SEDIA</div>
+      <a href="bayar.html?machine=2" class="button" id="btn2">PILIH</a>
     </div>
     <div class="glass-card">
-      <h3>Mesin 3</h3>
-      <div>ROSAK</div>
+      <h3 class="machine-title">MESIN 3</h3>
+      <div class="status status-broken">ROSAK</div>
+      <div class="button button-disabled">PILIH</div>
     </div>
     <div class="glass-card">
-      <h3>Mesin 4</h3>
-      <div>ROSAK</div>
+      <h3 class="machine-title">MESIN 4</h3>
+      <div class="status status-broken">ROSAK</div>
+      <div class="button button-disabled">PILIH</div>
     </div>
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+      authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+      databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-dobi-system-fyp",
+      storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+      messagingSenderId: "377544234994",
+      appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function updateStatus(id) {
+      const statusEl = document.getElementById(`status${id}`);
+      const btn = document.getElementById(`btn${id}`);
+      onValue(ref(db, `machines/${id}`), (snapshot) => {
+        const data = snapshot.val();
+        if (!data || data.status === "in_use" || data.status === "washing") {
+          statusEl.innerText = "SEDANG GUNA";
+          statusEl.className = "status status-unavailable";
+          if (btn) btn.classList.add("button-disabled");
+        } else if (data.status === "broken") {
+          statusEl.innerText = "ROSAK";
+          statusEl.className = "status status-broken";
+          if (btn) btn.classList.add("button-disabled");
+        } else {
+          statusEl.innerText = "SEDIA";
+          statusEl.className = "status status-available";
+          if (btn) btn.classList.remove("button-disabled");
+        }
+      });
+    }
+
+    updateStatus(1);
+    updateStatus(2);
+  </script>
 </body>
 </html>
