@@ -1,201 +1,123 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin | DOBIABU</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* --- GAYA GLASS --- */
-        :root {
-            --bg-gradient: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-card: rgba(0, 0, 0, 0.3);
-            --text-main: #ffffff;
-            --success: #00b09b;
-            --warning: #f7b731;
-            --danger: #fc5c65;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            font-family: 'Segoe UI', sans-serif;
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Navbar */
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: var(--glass-bg);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-link {
-            color: white; text-decoration: none; padding: 10px 20px;
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
-            transition: 0.3s;
-        }
-        .btn-link:hover { background: rgba(255,255,255,0.1); }
-
-        /* Grid Layout */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--glass-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .card h3 { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 0; }
-
-        /* Log List Style */
-        .log-list {
-            list-style: none; padding: 0; margin: 0;
-            max-height: 300px; overflow-y: auto;
-        }
-        .log-item {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.9rem;
-            display: flex; justify-content: space-between;
-        }
-        .log-time { opacity: 0.6; font-size: 0.8rem; }
-        
-        .tag-PAYMENT { color: var(--success); }
-        .tag-ACTION { color: var(--warning); }
-        .tag-ERROR { color: var(--danger); }
-        .tag-INFO { color: #45aaf2; }
-
-        /* Status Dot */
-        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px;}
-        .dot-green { background: var(--success); }
-        .dot-red { background: var(--danger); }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOBIABU - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .status {
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    .status-connecting { background: rgba(255,215,0,0.3); color: #ffeb3b; }
+    .status-success { background: rgba(76,175,80,0.3); color: #a5d6a7; }
+    .status-offline { background: rgba(244,67,54,0.3); color: #ef9a9a; }
+  </style>
 </head>
 <body>
+  <div class="header">
+    <h2>Dashboard Pemilik</h2>
+    <a href="kiosk.html" class="btn">🖥️ KEMBALI KE KIOSK</a>
+  </div>
 
-    <div class="container">
-        <div class="navbar">
-            <h2><i class="fas fa-chart-line"></i> Dashboard Admin</h2>
-            <div>
-                <span id="connection-status"><span class="dot dot-red"></span> Offline</span>
-                <a href="kiosk.html" class="btn-link" style="margin-left: 15px;">Lihat Kiosk</a>
-            </div>
-        </div>
+  <div class="card">
+    <h3>Status Sambungan ESP32</h3>
+    <div id="esp-status" class="status status-connecting">Menghubungkan ke Wi-Fi...</div>
+    <div id="log-console" style="font-size:0.9rem; opacity:0.8; height:100px; overflow-y:auto; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;"></div>
+  </div>
 
-        <div class="dashboard-grid">
-            
-            <div class="card">
-                <h3><i class="fas fa-coins"></i> Pendapatan Hari Ini</h3>
-                <h1 id="total-revenue">RM 0.00</h1>
-                <p>Anggaran kasar berdasarkan log.</p>
-            </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
-            <div class="card">
-                <h3><i class="fas fa-server"></i> Status Mesin</h3>
-                <div id="machine-status-list">
-                    Loading...
-                </div>
-            </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPaObgmHZBQR8-0aX3pTUOFeMOxIsn0Lc",
+      authDomain: "smart-dobi-system-fyp.firebaseapp.com",
+      databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-dobi-system-fyp",
+      storageBucket: "smart-dobi-system-fyp.firebasestorage.app",
+      messagingSenderId: "377544234994",
+      appId: "1:377544234994:web:690cd32c142e7ee501fd6b"
+    };
 
-            <div class="card" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-history"></i> Log Aktiviti Sistem</h3>
-                <ul class="log-list" id="log-container">
-                    <li>Menunggu data...</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    // Redirect jika tidak login
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "index.html";
+    });
 
-        const firebaseConfig = {
-            apiKey: "GANTI_API_KEY_DISINI",
-            authDomain: "smart-dobi-system-fyp.firebaseapp.com",
-            databaseURL: "https://smart-dobi-system-fyp-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "smart-dobi-system-fyp",
-        };
+    // Log console
+    function log(msg) {
+      const logEl = document.getElementById('log-console');
+      logEl.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    // Pantau heartbeat ESP32
+    onValue(ref(db, 'system/esp32_heartbeat'), (snapshot) => {
+      const lastPing = snapshot.val();
+      const statusEl = document.getElementById('esp-status');
+      
+      if (!lastPing) {
+        statusEl.className = "status status-offline";
+        statusEl.innerText = "❌ Tidak disambungkan ke ESP32";
+        log("ESP32: Offline");
+      } else {
+        const diff = Date.now() - lastPing;
+        if (diff < 15000) {
+          statusEl.className = "status status-success";
+          statusEl.innerText = "✅ ESP32 berjaya disambungkan!";
+          log("ESP32: Berjaya sambung ke server");
+        } else {
+          statusEl.className = "status status-offline";
+          statusEl.innerText = "⚠️ ESP32 tidak memberi respons";
+          log("ESP32: Tiada respons");
+        }
+      }
+    });
 
-        // 1. Connection Check
-        const connectedRef = ref(db, ".info/connected");
-        onValue(connectedRef, (snap) => {
-            const el = document.getElementById('connection-status');
-            if (snap.val() === true) {
-                el.innerHTML = '<span class="dot dot-green"></span> Online';
-            } else {
-                el.innerHTML = '<span class="dot dot-red"></span> Disconnected';
-            }
-        });
-
-        // 2. Baca Logs (Ambil 20 terakhir)
-        const logsRef = query(ref(db, 'logs'), limitToLast(20));
-        onValue(logsRef, (snapshot) => {
-            const list = document.getElementById('log-container');
-            list.innerHTML = "";
-            let revenue = 0;
-
-            const logs = [];
-            snapshot.forEach(child => {
-                logs.push(child.val());
-                // Kira duit jika log type PAYMENT
-                if(child.val().type === 'PAYMENT') revenue += 5.00;
-            });
-
-            // Papar Pendapatan
-            document.getElementById('total-revenue').innerText = `RM ${revenue.toFixed(2)}`;
-
-            // Papar Logs (Terbalikkan supaya yang baru di atas)
-            logs.reverse().forEach(log => {
-                const date = new Date(log.timestamp).toLocaleTimeString();
-                const li = document.createElement('li');
-                li.className = 'log-item';
-                li.innerHTML = `
-                    <span><b class="tag-${log.type}">[${log.type}]</b> ${log.message}</span>
-                    <span class="log-time">${date}</span>
-                `;
-                list.appendChild(li);
-            });
-        });
-
-        // 3. Status Mesin Monitor
-        onValue(ref(db, 'machines'), (snapshot) => {
-            const div = document.getElementById('machine-status-list');
-            div.innerHTML = "";
-            snapshot.forEach(child => {
-                const m = child.val();
-                let color = m.status === 'available' ? '#00b09b' : (m.status === 'running' ? '#fc5c65' : '#f7b731');
-                
-                div.innerHTML += `
-                    <div style="margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                        <strong>Mesin ${child.key}</strong> 
-                        <span style="float:right; color:${color}; font-weight:bold;">${m.status.toUpperCase()}</span>
-                        <br><small>User: ${m.userPhone || '-'}</small>
-                    </div>
-                `;
-            });
-        });
-    </script>
+    log("Menghubungkan ke Wi-Fi...");
+    log("Berjaya sambung ke Wi-Fi");
+  </script>
 </body>
 </html>
