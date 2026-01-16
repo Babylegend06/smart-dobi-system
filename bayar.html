@@ -4,64 +4,109 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOBIABU - Bayar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Fredoka One', cursive;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #ffffff;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 24px;
     }
     .payment-container {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
       border-radius: 20px;
-      padding: 30px;
+      padding: 32px;
       width: 90%;
-      max-width: 500px;
+      max-width: 480px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      margin-bottom: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .qr-code {
+      width: 180px;
+      height: 180px;
+      margin: 24px auto;
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
     }
     .input-field {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      padding: 12px 16px;
+      margin: 12px 0;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
       color: white;
+      font-family: 'Inter', sans-serif;
       font-size: 1rem;
+    }
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.6);
     }
     .button {
       display: inline-block;
-      padding: 15px 30px;
-      margin: 10px;
-      background: rgba(255,255,255,0.2);
+      padding: 12px 28px;
+      margin: 12px;
+      background: #4361ee;
       color: white;
       text-decoration: none;
-      border-radius: 50px;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.2rem;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
       cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+      border: none;
+    }
+    .button:hover {
+      background: #3a56e4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
+    }
+    .status-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 20px 0;
+      padding: 8px 20px;
+      border-radius: 20px;
+      display: inline-block;
+      background: rgba(248, 113, 113, 0.2);
+      color: #f87171;
+    }
+    .status-paid {
+      background: rgba(76, 201, 240, 0.2);
+      color: #4cc9f0;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 24px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 <body>
   <div class="payment-container">
     <h2>Imbas QR & Bayar</h2>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DOBIABU" style="width:200px; height:200px; margin:20px;">
+    <div class="qr-code">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=DOBIABU_DEMO" style="width:100%">
+    </div>
+    <p>Status: <span id="status-label" class="status-label">BELUM DIBAYAR</span></p>
     
-    <input type="text" id="whatsapp" class="input-field" placeholder="Nombor WhatsApp (0189892155)">
+    <div class="section-title">Notifikasi WhatsApp (Opsional)</div>
+    <input type="text" id="whatsapp-number" class="input-field" placeholder="0189892155">
+    
     <button onclick="bayar()" class="button">BAYAR</button>
-    
-    <div id="status" style="margin-top:20px; font-size:1.2rem;"></div>
   </div>
 
   <script type="module">
@@ -84,18 +129,19 @@
     const machine = url.searchParams.get("machine") || "1";
 
     function bayar() {
-      const wa = document.getElementById('whatsapp').value.trim();
-      const cleanWa = wa.replace(/\D/g, '');
-      
+      const waInput = document.getElementById('whatsapp-number').value.trim();
+      const cleanWa = waInput.replace(/\D/g, '');
+
       update(ref(db, `machines/${machine}`), {
         status: "ready",
-        whatsapp: cleanWa || null,
-        started_at: 0
+        whatsapp: cleanWa || null
       }).then(() => {
-        document.getElementById('status').innerHTML = '<span style="color:#a5d6a7;">✅ PEMBAYARAN BERJAYA!</span>';
+        document.getElementById("status-label").innerText = "SUDAH DIBAYAR";
+        document.getElementById("status-label").className = "status-label status-paid";
         setTimeout(() => window.location.href = `page3.html?machine=${machine}`, 1500);
       }).catch(err => {
-        alert("Gagal hantar ke sistem");
+        console.error("Ralat Firebase:", err);
+        alert("Gagal hantar ke sistem. Cuba lagi.");
       });
     }
   </script>
