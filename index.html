@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DOBIABU - Owner Login</title>
+  <title>DOBIABU - Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -15,7 +15,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
     }
     .login-container {
       background: rgba(255,255,255,0.1);
@@ -27,27 +26,22 @@
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .logo { font-size: 3.5rem; letter-spacing: 2px; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 20px; }
-    .subtitle { font-size: 1.3rem; opacity: 0.9; margin-bottom: 30px; }
+    .logo { font-size: 3.5rem; letter-spacing: 2px; margin-bottom: 20px; }
     .login-btn {
       background: #4285F4;
       color: white;
       padding: 15px 30px;
       border-radius: 50px;
       border: none;
-      font-family: inherit;
       font-size: 1.2rem;
       cursor: pointer;
-      transition: background 0.3s;
       width: 100%;
     }
-    .login-btn:hover { background: #357ae8; }
   </style>
 </head>
 <body>
   <div class="login-container">
     <div class="logo">DOBIABU</div>
-    <div class="subtitle">OWNER LOGIN</div>
     <button class="login-btn" id="google-login">LOGIN DENGAN GOOGLE</button>
   </div>
 
@@ -71,13 +65,8 @@
     document.getElementById('google-login').addEventListener('click', () => {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
-        .then((result) => {
-          window.location.href = "owner.html";
-        })
-        .catch((error) => {
-          alert("Gagal log masuk. Cuba lagi.");
-          console.error(error);
-        });
+        .then(() => window.location.href = "owner.html")
+        .catch(err => alert("Gagal login"));
     });
   </script>
 </body>
